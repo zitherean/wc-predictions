@@ -1,3 +1,46 @@
+## Branching Workflow
+
+```text
+frontend  ┐
+          ├── alpha ─── main ─── Vercel deployment
+database  ┘
+```
+
+This project uses separate branches to keep development organized before deploying changes to the live website.
+
+### `frontend`
+
+The `frontend` branch is used for frontend-related work, including:
+
+- HTML pages
+- CSS styling
+- client-side JavaScript
+- page layout and user interface changes
+- forms, buttons, and visual improvements
+
+### `database`
+
+The `database` branch is used for database-related work, including:
+
+- Supabase table setup
+- SQL schema changes
+- Row Level Security policies
+- seed data
+- database-related documentation
+
+### `alpha`
+
+The `alpha` branch is the main development/testing branch.
+
+Work from feature branches such as `frontend` and `database` should first be merged into `alpha`. This allows changes to be reviewed and tested before they are added to the production branch.
+
+### `main`
+
+The `main` branch is the production branch.
+
+This branch is connected to Vercel, so any changes pushed or merged into `main` may trigger a deployment to the live website.
+
+
 ## Project Structure
 
 ```text

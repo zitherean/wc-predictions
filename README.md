@@ -1,4 +1,3 @@
-````md
 ## Project Structure
 
 ```text
@@ -12,7 +11,7 @@ world-cup-predictions/
 ├── package.json
 ├── vercel.json
 └── README.md
-````
+```
 
 ### `api/`
 
@@ -177,5 +176,3 @@ For example, it can map `/matches` to `matches.html` or schedule `/api/sync-matc
 ### `README.md`
 
 Main project documentation. It should explain what the project does, how to set it up, how the folder structure works, and how to run or deploy the app.
-
-```

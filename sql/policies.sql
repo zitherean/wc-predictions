@@ -4,6 +4,37 @@ alter table public.matches enable row level security;
 alter table public.predictions enable row level security;
 
 -- =========================
+-- DROP EXISTING POLICIES
+-- =========================
+
+drop policy if exists "Authenticated users can read profiles"
+on public.profiles;
+
+drop policy if exists "Users can insert own profile"
+on public.profiles;
+
+drop policy if exists "Users can update own profile"
+on public.profiles;
+
+drop policy if exists "Authenticated users can read matches"
+on public.matches;
+
+drop policy if exists "Authenticated users can read predictions"
+on public.predictions;
+
+drop policy if exists "Users can insert own predictions"
+on public.predictions;
+
+drop policy if exists "Users can update own predictions"
+on public.predictions;
+
+drop policy if exists "Users can insert own predictions before kickoff"
+on public.predictions;
+
+drop policy if exists "Users can update own predictions before kickoff"
+on public.predictions;
+
+-- =========================
 -- PROFILES POLICIES
 -- =========================
 

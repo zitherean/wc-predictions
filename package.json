@@ -1,12 +1,18 @@
 {
   "name": "wc-predictions",
   "version": "1.0.0",
-  "description": "````md\r ## Project Structure",
-  "main": "index.js",
+  "description": "World Cup 2026 score prediction app for friends.",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vercel dev",
+    "deploy": "vercel deploy"
   },
-  "keywords": [],
+  "keywords": [
+    "world-cup",
+    "predictions",
+    "supabase",
+    "vercel"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {

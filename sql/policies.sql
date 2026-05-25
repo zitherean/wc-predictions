@@ -53,6 +53,7 @@ for select
 to authenticated
 using (true);
 
+-- Users can insert their own predictions.
 create policy "Users can insert own predictions before kickoff"
 on public.predictions
 for insert
@@ -67,6 +68,7 @@ with check (
   )
 );
 
+-- Users can update their own predictions.
 create policy "Users can update own predictions before kickoff"
 on public.predictions
 for update

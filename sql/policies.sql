@@ -53,17 +53,39 @@ for select
 to authenticated
 using (true);
 
--- Users can insert their own predictions.
-create policy "Users can insert own predictions"
+create policy "Users can insert own predictions before kickoff"
 on public.predictions
 for insert
 to authenticated
-with check ((select auth.uid()) = user_id);
+with check (
+  (select auth.uid()) = user_id
+  and exists (
+    select 1
+    from public.matches
+    where matches.id = predictions.match_id
+      and matches.kickoff_time > now()
+  )
+);
 
--- Users can update their own predictions.
-create policy "Users can update own predictions"
+create policy "Users can update own predictions before kickoff"
 on public.predictions
 for update
 to authenticated
-using ((select auth.uid()) = user_id)
-with check ((select auth.uid()) = user_id);
+using (
+  (select auth.uid()) = user_id
+  and exists (
+    select 1
+    from public.matches
+    where matches.id = predictions.match_id
+      and matches.kickoff_time > now()
+  )
+)
+with check (
+  (select auth.uid()) = user_id
+  and exists (
+    select 1
+    from public.matches
+    where matches.id = predictions.match_id
+      and matches.kickoff_time > now()
+  )
+);

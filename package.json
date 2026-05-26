@@ -4,7 +4,7 @@
   "description": "World Cup 2026 score prediction app for friends.",
   "type": "module",
   "scripts": {
-    "dev": "vercel dev",
+    "start": "vercel dev",
     "deploy": "vercel deploy"
   },
   "keywords": [

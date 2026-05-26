@@ -1,6 +1,10 @@
 -- Enable UUID generation
 create extension if not exists "pgcrypto";
 
+-- Drop existing tables
+drop table if exists public.predictions;
+drop table if exists public.profiles;
+
 -- User profile table
 -- Supabase Auth stores users in auth.users.
 -- This table stores public game information linked to each user.

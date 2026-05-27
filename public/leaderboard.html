@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard | WC Predictions 2026</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">WC Predictions 2026</a>
+    <nav class="site-nav">
+      <a href="matches.html">Matches</a>
+      <a href="leaderboard.html" aria-current="page">Leaderboard</a>
+      <a href="rules.html">Rules</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main class="page-shell page-leaderboard">
+    <section class="page-heading">
+      <div>
+        <span class="eyebrow">Competition</span>
+        <h1>Leaderboard</h1>
+        <p>See how the top players are ranking in the World Cup prediction game.</p>
+      </div>
+      <div class="page-actions">
+        <button id="refresh-leaderboard" class="button button-secondary">Refresh</button>
+      </div>
+    </section>
+
+    <section class="card leaderboard-card">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr><td colspan="3">Loading leaderboard...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="js/leaderboard.js"></script>
+</body>
+</html>

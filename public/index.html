@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WC Predictions 2026</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">WC Predictions 2026</a>
+    <nav class="site-nav">
+      <a href="matches.html">Matches</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="rules.html">Rules</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main class="page-shell page-home">
+    <section class="hero card">
+      <div>
+        <span class="eyebrow">World Cup 2026</span>
+        <h1>Predict the scores. Track the leaderboard. Play just for fun.</h1>
+        <p>Sign in to make predictions for upcoming matches and compete with friends on the leaderboard.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="button button-primary" href="matches.html">Go to Matches</a>
+        <a class="button button-secondary" href="leaderboard.html">View Leaderboard</a>
+      </div>
+    </section>
+
+    <section class="auth-layout">
+      <article class="card auth-card">
+        <h2>Login</h2>
+        <form id="sign-in-form">
+          <label>Email<input type="email" name="email" required placeholder="you@example.com" /></label>
+          <label>Password<input type="password" name="password" required placeholder="Enter password" /></label>
+          <button class="button button-primary" type="submit">Sign in</button>
+        </form>
+      </article>
+
+      <article class="card auth-card">
+        <h2>Sign up</h2>
+        <form id="sign-up-form">
+          <label>Email<input type="email" name="email" required placeholder="you@example.com" /></label>
+          <label>Password<input type="password" name="password" required placeholder="Create password" /></label>
+          <button class="button button-secondary" type="submit">Create account</button>
+        </form>
+      </article>
+    </section>
+
+    <section class="card status-card">
+      <div id="auth-status" class="status-panel">Loading authentication status...</div>
+    </section>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/index.js"></script>
+</body>
+</html>

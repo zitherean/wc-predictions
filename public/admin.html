@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | WC Predictions 2026</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">WC Predictions 2026</a>
+    <nav class="site-nav">
+      <a href="matches.html">Matches</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="rules.html">Rules</a>
+      <a href="admin.html" aria-current="page">Admin</a>
+    </nav>
+  </header>
+
+  <main class="page-shell page-admin">
+    <section class="page-heading">
+      <div>
+        <span class="eyebrow">Administrator</span>
+        <h1>Admin actions</h1>
+        <p>Trigger match sync or recalculate leaderboard points from the server.</p>
+      </div>
+    </section>
+
+    <section class="admin-grid">
+      <button id="sync-matches" class="button button-primary">Sync matches</button>
+      <button id="calculate-points" class="button button-secondary">Recalculate points</button>
+      <button id="sign-out" class="button button-tertiary">Sign out</button>
+    </section>
+
+    <section class="card log-card">
+      <h2>Activity log</h2>
+      <div id="admin-log" class="log-output">Ready for admin actions.</div>
+    </section>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

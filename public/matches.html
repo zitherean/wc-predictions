@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matches | WC Predictions 2026</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">WC Predictions 2026</a>
+    <nav class="site-nav">
+      <a href="matches.html" aria-current="page">Matches</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="rules.html">Rules</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main class="page-shell page-matches">
+    <section class="page-heading">
+      <div>
+        <span class="eyebrow">Upcoming Predictions</span>
+        <h1>Match predictions</h1>
+        <p>Submit your predicted scores before kickoff. Your points will update automatically once results are in.</p>
+      </div>
+      <div class="page-actions">
+        <button id="refresh-matches" class="button button-secondary">Refresh matches</button>
+        <button id="sign-out" class="button button-tertiary">Sign out</button>
+      </div>
+    </section>
+
+    <section id="matches-list" class="grid-list">
+      <div class="card empty-state">
+        <p>Loading matches... If your Supabase config is not set, please configure it in <code>public/js/config.js</code>.</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/matches.js"></script>
+</body>
+</html>

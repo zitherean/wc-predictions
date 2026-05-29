@@ -151,6 +151,7 @@ button {
   border: 1px solid rgba(148, 163, 184, 0.16);
   border-radius: 12px;
   color: var(--text);
+  text-align: center;
 }
 
 .icon-button {
@@ -285,10 +286,10 @@ body[data-theme='light'] .select-field {
   color: #fff;
 }
 
-.button-secondary {
-  background: rgba(148, 163, 184, 0.12);
-  color: var(--text);
-}
+  .button-blue {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: #fff;
+  }
 
 .button-tertiary {
   background: transparent;

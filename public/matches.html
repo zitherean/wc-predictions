@@ -14,17 +14,19 @@
       <span class="page-title-inline" data-i18n="page.matches">Matches</span>
     </div>
     <div class="header-actions">
-      <button class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+      <button id="refresh-matches" class="button button-secondary icon-button" aria-label="Refresh matches" data-i18n-title="action.refresh">↻</button>
+      <button type="button" class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
       <div class="options-menu" hidden>
         <div class="options-group">
           <span class="options-label" data-i18n="options.theme">Theme</span>
-          <button id="theme-toggle" class="button button-secondary">Dark</button>
+          <button type="button" id="theme-toggle" class="button button-secondary" aria-label="Toggle theme">🌙 Dark</button>
         </div>
         <div class="options-group">
           <span class="options-label" data-i18n="options.language">Language</span>
           <select id="language-select" class="select-field">
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="es">🇪🇸 Español</option>
           </select>
         </div>
         <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
@@ -44,9 +46,6 @@
         <span class="eyebrow">Upcoming Predictions</span>
         <h2>Match predictions</h2>
         <p>Submit your predicted scores before kickoff. Your points will update automatically once results are in.</p>
-      </div>
-      <div class="page-actions">
-        <button id="refresh-matches" class="button button-secondary icon-button" aria-label="Refresh matches" data-i18n-title="action.refresh">↻</button>
       </div>
     </section>
 

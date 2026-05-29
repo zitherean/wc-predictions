@@ -14,17 +14,18 @@
       <span class="page-title-inline" data-i18n="page.signUp">Sign up</span>
     </div>
     <div class="header-actions">
-      <button class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+      <button type="button" class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
       <div class="options-menu" hidden>
         <div class="options-group">
           <span class="options-label" data-i18n="options.theme">Theme</span>
-          <button id="theme-toggle" class="button button-secondary">Dark</button>
+          <button type="button" id="theme-toggle" class="button button-secondary" aria-label="Toggle theme">🌙 Dark</button>
         </div>
         <div class="options-group">
           <span class="options-label" data-i18n="options.language">Language</span>
           <select id="language-select" class="select-field">
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="es">🇪🇸 Español</option>
           </select>
         </div>
         <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
@@ -39,14 +40,14 @@
   </header>
 
   <main class="page-shell page-signup">
-    <section class="card auth-card" style="max-width:520px; margin:2.4rem auto;">
-      <h2>Create account</h2>
+    <section class="card auth-card" style="max-width:520px; margin:0 auto 2.4rem;">
+      <h2 data-i18n="auth.createAccount">Create account</h2>
       <form id="sign-up-form">
-        <label>Username<input type="text" name="username" required placeholder="choose a username" autocomplete="username" /></label>
-        <label>Password<input type="password" name="password" required placeholder="Create password" autocomplete="new-password" /></label>
+        <label><span data-i18n="auth.username">Username</span><input type="text" name="username" required placeholder="Choose a username" autocomplete="username" /></label>
+        <label><span data-i18n="auth.password">Password</span><input type="password" name="password" required placeholder="Create password" autocomplete="new-password" /></label>
         <div style="display:flex; gap:0.75rem; align-items:center; margin-top:0.6rem;">
-          <button class="button button-primary" type="submit">Create account</button>
-          <a class="button button-secondary" href="index.html">Back to sign in</a>
+          <button class="button button-primary" type="submit" data-i18n="auth.createAccountButton">Create account</button>
+          <a class="button button-secondary" href="index.html" data-i18n="auth.backToSignIn">Back to sign in</a>
         </div>
       </form>
 

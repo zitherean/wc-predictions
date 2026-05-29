@@ -14,17 +14,18 @@
       <span class="page-title-inline" data-i18n="page.rules">Rules</span>
     </div>
     <div class="header-actions">
-      <button class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+      <button type="button" class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
       <div class="options-menu" hidden>
         <div class="options-group">
           <span class="options-label" data-i18n="options.theme">Theme</span>
-          <button id="theme-toggle" class="button button-secondary">Dark</button>
+          <button type="button" id="theme-toggle" class="button button-secondary" aria-label="Toggle theme">🌙 Dark</button>
         </div>
         <div class="options-group">
           <span class="options-label" data-i18n="options.language">Language</span>
           <select id="language-select" class="select-field">
-            <option value="en">English</option>
-            <option value="de">Deutsch</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="es">🇪🇸 Español</option>
           </select>
         </div>
         <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
@@ -44,8 +45,10 @@
       <ul>
         <li><strong>Exact score:</strong> 5 points.</li>
         <li><strong>Correct result:</strong> 3 points for the right winner or draw.</li>
+        <li><strong>Knockout bonus:</strong> +2 points for correctly guessing the team that advances.</li>
         <li><strong>Wrong result:</strong> 0 points.</li>
       </ul>
+      <p>Knockout matches still use the 5-3-0 scoring base, but a correct advance prediction earns an extra 2 points even when the match is decided by penalties.</p>
 
       <h2>Prediction deadlines</h2>
       <p>You can update predictions until kickoff time. Once the match has started, the score fields are locked.</p>

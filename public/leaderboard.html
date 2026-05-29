@@ -13,6 +13,25 @@
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
       <span class="page-title-inline" data-i18n="page.leaderboard">Leaderboard</span>
     </div>
+    <div class="header-actions">
+      <button id="refresh-leaderboard" class="button button-secondary icon-button" aria-label="Refresh leaderboard" data-i18n-title="action.refresh">↻</button>
+      <button type="button" class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+      <div class="options-menu" hidden>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.theme">Theme</span>
+          <button type="button" id="theme-toggle" class="button button-secondary" aria-label="Toggle theme">🌙 Dark</button>
+        </div>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.language">Language</span>
+          <select id="language-select" class="select-field">
+            <option value="en">🇬🇧 English</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="es">🇪🇸 Español</option>
+          </select>
+        </div>
+        <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
+      </div>
+    </div>
     <nav class="site-nav">
       <a href="leaderboard.html" aria-current="page" data-i18n="nav.leaderboard">Leaderboard</a>
       <a href="matches.html" data-i18n="nav.matches">Matches</a>
@@ -23,26 +42,6 @@
 
   <main class="page-shell page-leaderboard">
     <section class="card leaderboard-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-        <div style="position:relative;">
-          <button class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
-          <div class="options-menu" hidden>
-            <div class="options-group">
-              <span class="options-label" data-i18n="options.theme">Theme</span>
-              <button id="theme-toggle" class="button button-secondary">Dark</button>
-            </div>
-            <div class="options-group">
-              <span class="options-label" data-i18n="options.language">Language</span>
-              <select id="language-select" class="select-field">
-                <option value="en">English</option>
-                <option value="de">Deutsch</option>
-              </select>
-            </div>
-            <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
-          </div>
-        </div>
-        <button id="refresh-leaderboard" class="button button-secondary icon-button" aria-label="Refresh leaderboard" data-i18n-title="action.refresh">↻</button>
-      </div>
       <table class="leaderboard-table">
         <thead>
           <tr>

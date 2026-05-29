@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin | FIFA WC 2026 Predictions</title>
+  <title>Sign up | FIFA WC 2026 Predictions</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -11,7 +11,7 @@
     <a class="brand" href="index.html">FIFA WC 2026 Predictions</a>
     <div class="header-meta">
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-      <span class="page-title-inline" data-i18n="page.admin">Admin</span>
+      <span class="page-title-inline" data-i18n="page.signUp">Sign up</span>
     </div>
     <div class="header-actions">
       <button class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
@@ -34,34 +34,30 @@
       <a href="leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a>
       <a href="matches.html" data-i18n="nav.matches">Matches</a>
       <a href="rules.html" data-i18n="nav.rules">Rules</a>
-      <a href="admin.html" aria-current="page" data-i18n="nav.admin">Admin</a>
+      <a href="admin.html" data-i18n="nav.admin">Admin</a>
     </nav>
   </header>
 
-  <main class="page-shell page-admin">
-    <section class="page-heading">
-      <div>
-        <span class="eyebrow">Administrator</span>
-        <h1>Admin actions</h1>
-        <p>Trigger match sync or recalculate leaderboard points from the server.</p>
-      </div>
-    </section>
+  <main class="page-shell page-signup">
+    <section class="card auth-card" style="max-width:520px; margin:2.4rem auto;">
+      <h2>Create account</h2>
+      <form id="sign-up-form">
+        <label>Username<input type="text" name="username" required placeholder="choose a username" autocomplete="username" /></label>
+        <label>Password<input type="password" name="password" required placeholder="Create password" autocomplete="new-password" /></label>
+        <div style="display:flex; gap:0.75rem; align-items:center; margin-top:0.6rem;">
+          <button class="button button-primary" type="submit">Create account</button>
+          <a class="button button-secondary" href="index.html">Back to sign in</a>
+        </div>
+      </form>
 
-    <section class="admin-grid">
-      <button id="sync-matches" class="button button-primary">Sync matches</button>
-      <button id="calculate-points" class="button button-secondary">Recalculate points</button>
-      <button id="sign-out" class="button button-tertiary">Sign out</button>
-    </section>
-
-    <section class="card log-card">
-      <h2>Activity log</h2>
-      <div id="admin-log" class="log-output">Ready for admin actions.</div>
+      <section class="card status-card" style="margin-top:1.25rem;">
+        <div id="auth-status" class="status-panel">Ready to create an account.</div>
+      </section>
     </section>
   </main>
 
   <script src="js/nav-toggle.js"></script>
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/admin.js"></script>
   <script type="module" src="js/index.js"></script>
 </body>
 </html>

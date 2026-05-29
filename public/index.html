@@ -3,58 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WC Predictions 2026</title>
+  <title>FIFA WC 2026 Predictions</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">WC Predictions 2026</a>
+    <a class="brand" href="index.html">FIFA WC 2026 Predictions</a>
+    <div class="header-meta">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <span class="page-title-inline" data-i18n="page.signIn">Sign in</span>
+    </div>
+    <div class="header-actions">
+      <button class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+      <div class="options-menu" hidden>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.theme">Theme</span>
+          <button id="theme-toggle" class="button button-secondary">Dark</button>
+        </div>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.language">Language</span>
+          <select id="language-select" class="select-field">
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+          </select>
+        </div>
+        <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
+      </div>
+    </div>
     <nav class="site-nav">
-      <a href="matches.html">Matches</a>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="rules.html">Rules</a>
-      <a href="admin.html">Admin</a>
+      <a href="leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a>
+      <a href="matches.html" data-i18n="nav.matches">Matches</a>
+      <a href="rules.html" data-i18n="nav.rules">Rules</a>
+      <a href="admin.html" data-i18n="nav.admin">Admin</a>
     </nav>
   </header>
 
   <main class="page-shell page-home">
-    <section class="hero card">
-      <div>
-        <span class="eyebrow">World Cup 2026</span>
-        <h1>Predict the scores. Track the leaderboard. Play just for fun.</h1>
-        <p>Sign in to make predictions for upcoming matches and compete with friends on the leaderboard.</p>
-      </div>
-      <div class="hero-actions">
-        <a class="button button-primary" href="matches.html">Go to Matches</a>
-        <a class="button button-secondary" href="leaderboard.html">View Leaderboard</a>
-      </div>
-    </section>
-
-    <section class="auth-layout">
-      <article class="card auth-card">
-        <h2>Login</h2>
-        <form id="sign-in-form">
-          <label>Email<input type="email" name="email" required placeholder="you@example.com" /></label>
-          <label>Password<input type="password" name="password" required placeholder="Enter password" /></label>
+    <section class="card auth-card" style="max-width:520px; margin:2.4rem auto;">
+      <h2>Sign in</h2>
+      <form id="sign-in-form">
+        <label>Username<input type="text" name="username" required placeholder="choose a username" autocomplete="username" /></label>
+        <label>Password<input type="password" name="password" required placeholder="Enter password" autocomplete="current-password" /></label>
+        <div style="display:flex; gap:0.75rem; align-items:center; margin-top:0.6rem;">
           <button class="button button-primary" type="submit">Sign in</button>
-        </form>
-      </article>
+          <a class="button button-secondary" href="signup.html">Sign up</a>
+        </div>
+      </form>
 
-      <article class="card auth-card">
-        <h2>Sign up</h2>
-        <form id="sign-up-form">
-          <label>Email<input type="email" name="email" required placeholder="you@example.com" /></label>
-          <label>Password<input type="password" name="password" required placeholder="Create password" /></label>
-          <button class="button button-secondary" type="submit">Create account</button>
-        </form>
-      </article>
-    </section>
-
-    <section class="card status-card">
-      <div id="auth-status" class="status-panel">Loading authentication status...</div>
+      <section class="card status-card" style="margin-top:1.25rem;">
+        <div id="auth-status" class="status-panel">Loading authentication status...</div>
+      </section>
     </section>
   </main>
 
+  <script src="js/nav-toggle.js"></script>
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/index.js"></script>
 </body>

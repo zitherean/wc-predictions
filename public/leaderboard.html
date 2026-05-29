@@ -3,33 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leaderboard | WC Predictions 2026</title>
+  <title>Leaderboard | FIFA WC 2026 Predictions</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">WC Predictions 2026</a>
+    <a class="brand" href="index.html">FIFA WC 2026 Predictions</a>
+    <div class="header-meta">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <span class="page-title-inline" data-i18n="page.leaderboard">Leaderboard</span>
+    </div>
     <nav class="site-nav">
-      <a href="matches.html">Matches</a>
-      <a href="leaderboard.html" aria-current="page">Leaderboard</a>
-      <a href="rules.html">Rules</a>
-      <a href="admin.html">Admin</a>
+      <a href="leaderboard.html" aria-current="page" data-i18n="nav.leaderboard">Leaderboard</a>
+      <a href="matches.html" data-i18n="nav.matches">Matches</a>
+      <a href="rules.html" data-i18n="nav.rules">Rules</a>
+      <a href="admin.html" data-i18n="nav.admin">Admin</a>
     </nav>
   </header>
 
   <main class="page-shell page-leaderboard">
-    <section class="page-heading">
-      <div>
-        <span class="eyebrow">Competition</span>
-        <h1>Leaderboard</h1>
-        <p>See how the top players are ranking in the World Cup prediction game.</p>
-      </div>
-      <div class="page-actions">
-        <button id="refresh-leaderboard" class="button button-secondary">Refresh</button>
-      </div>
-    </section>
-
     <section class="card leaderboard-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <div style="position:relative;">
+          <button class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+          <div class="options-menu" hidden>
+            <div class="options-group">
+              <span class="options-label" data-i18n="options.theme">Theme</span>
+              <button id="theme-toggle" class="button button-secondary">Dark</button>
+            </div>
+            <div class="options-group">
+              <span class="options-label" data-i18n="options.language">Language</span>
+              <select id="language-select" class="select-field">
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+              </select>
+            </div>
+            <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
+          </div>
+        </div>
+        <button id="refresh-leaderboard" class="button button-secondary icon-button" aria-label="Refresh leaderboard" data-i18n-title="action.refresh">↻</button>
+      </div>
       <table class="leaderboard-table">
         <thead>
           <tr>
@@ -45,6 +58,8 @@
     </section>
   </main>
 
+  <script src="js/nav-toggle.js"></script>
   <script type="module" src="js/leaderboard.js"></script>
+  <script type="module" src="js/index.js"></script>
 </body>
 </html>

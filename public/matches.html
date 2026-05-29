@@ -3,17 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matches | WC Predictions 2026</title>
+  <title>Matches | FIFA WC 2026 Predictions</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="index.html">WC Predictions 2026</a>
+    <a class="brand" href="index.html">FIFA WC 2026 Predictions</a>
+    <div class="header-meta">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <span class="page-title-inline" data-i18n="page.matches">Matches</span>
+    </div>
+    <div class="header-actions">
+      <button class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+      <div class="options-menu" hidden>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.theme">Theme</span>
+          <button id="theme-toggle" class="button button-secondary">Dark</button>
+        </div>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.language">Language</span>
+          <select id="language-select" class="select-field">
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+          </select>
+        </div>
+        <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
+      </div>
+    </div>
     <nav class="site-nav">
-      <a href="matches.html" aria-current="page">Matches</a>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="rules.html">Rules</a>
-      <a href="admin.html">Admin</a>
+      <a href="leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a>
+      <a href="matches.html" aria-current="page" data-i18n="nav.matches">Matches</a>
+      <a href="rules.html" data-i18n="nav.rules">Rules</a>
+      <a href="admin.html" data-i18n="nav.admin">Admin</a>
     </nav>
   </header>
 
@@ -21,12 +42,11 @@
     <section class="page-heading">
       <div>
         <span class="eyebrow">Upcoming Predictions</span>
-        <h1>Match predictions</h1>
+        <h2>Match predictions</h2>
         <p>Submit your predicted scores before kickoff. Your points will update automatically once results are in.</p>
       </div>
       <div class="page-actions">
-        <button id="refresh-matches" class="button button-secondary">Refresh matches</button>
-        <button id="sign-out" class="button button-tertiary">Sign out</button>
+        <button id="refresh-matches" class="button button-secondary icon-button" aria-label="Refresh matches" data-i18n-title="action.refresh">↻</button>
       </div>
     </section>
 
@@ -37,7 +57,9 @@
     </section>
   </main>
 
+  <script src="js/nav-toggle.js"></script>
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/matches.js"></script>
+  <script type="module" src="js/index.js"></script>
 </body>
 </html>

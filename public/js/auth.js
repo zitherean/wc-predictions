@@ -10,17 +10,37 @@ export async function getUser() {
   return data.session?.user || null;
 }
 
-export async function signIn(email, password) {
+function usernameToEmail(username) {
+  // create a synthetic email to satisfy Supabase auth
+  const clean = String(username).trim().toLowerCase().replace(/[^a-z0-9._-]/g, '_');
+  return `${clean}@wc-predictions.local`;
+}
+
+export async function signInWithUsername(username, password) {
   if (!hasSupabaseConfig) throw new Error('Supabase config is not set.');
+  const email = usernameToEmail(username);
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
   return true;
 }
 
-export async function signUp(email, password) {
+export async function signUpWithUsername(username, password) {
   if (!hasSupabaseConfig) throw new Error('Supabase config is not set.');
-  const { error } = await supabase.auth.signUp({ email, password });
+  const email = usernameToEmail(username);
+  const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) throw error;
+
+  // attempt to create/update the public profile row
+  try {
+    const userId = data.user?.id;
+    if (userId) {
+      await supabase.from('profiles').upsert({ id: userId, username: username, total_points: 0 }, { onConflict: ['id'] });
+    }
+  } catch (err) {
+    // non-fatal - show message but allow account creation to proceed
+    console.warn('profile upsert failed', err?.message || err);
+  }
+
   return true;
 }
 
@@ -37,10 +57,10 @@ export async function initAuthForms() {
     signInForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const form = new FormData(signInForm);
-      const email = form.get('email');
+      const username = form.get('username');
       const password = form.get('password');
       try {
-        await signIn(email, password);
+        await signInWithUsername(username, password);
         showMessage(statusContainer, 'Signed in successfully.', 'success');
         window.location.href = 'matches.html';
       } catch (error) {
@@ -53,11 +73,12 @@ export async function initAuthForms() {
     signUpForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       const form = new FormData(signUpForm);
-      const email = form.get('email');
+      const username = form.get('username');
       const password = form.get('password');
       try {
-        await signUp(email, password);
-        showMessage(statusContainer, 'Account created. Check your email if confirmation is required.', 'success');
+        await signUpWithUsername(username, password);
+        showMessage(statusContainer, 'Account created. You can now sign in.', 'success');
+        window.location.href = 'index.html';
       } catch (error) {
         showMessage(statusContainer, error.message || 'Unable to create account.', 'danger');
       }
@@ -81,7 +102,15 @@ export async function renderUserStatus() {
 
   const user = await getUser();
   if (user) {
-    showMessage(statusContainer, `Signed in as ${user.email}`);
+    // try to show username from profiles table
+    let display = user.email || user.id;
+    try {
+      const { data } = await supabase.from('profiles').select('username').eq('id', user.id).single();
+      if (data?.username) display = data.username;
+    } catch (err) {
+      // ignore
+    }
+    showMessage(statusContainer, `Signed in as ${display}`);
   } else {
     showMessage(statusContainer, 'Not signed in. Use the form above or go to Matches once signed in.');
   }

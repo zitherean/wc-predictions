@@ -1,47 +1,12 @@
-const {
-  data: { user },
-  error: userError
-} = await supabase.auth.getUser();
-
-console.log("Current user:", user);
-console.log("User error:", userError);
-
-import { supabase } from "./supabase-client.js";
-
-async function loadMatches() {
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-
-  console.log("Current user:", user);
-
-  const { data, error } = await supabase
-    .from("matches")
-    .select("*")
-    .order("kickoff_time", { ascending: true });
-
-  if (error) {
-    console.error("Error loading matches:", error);
-    return;
-  }
-
-  console.log("Matches:", data);
-}
-
-loadMatches();import { supabase, hasSupabaseConfig } from './supabase-client.js';
+import { supabase } from './supabase-client.js';
 import { formatMatchDate, showMessage } from './utils.js';
-import { fetchPredictions, savePrediction } from './predictions.js';
+// import { savePrediction } from './predictions.js';
 
 const matchesList = document.querySelector('#matches-list');
 const refreshButton = document.querySelector('#refresh-matches');
 const signOutButton = document.querySelector('#sign-out');
 
 async function fetchMatches() {
-  if (!hasSupabaseConfig) {
-    renderEmpty('Configure Supabase in public/js/config.js to view match data.');
-    return [];
-  }
-
   const { data, error } = await supabase
     .from('matches')
     .select('id, home_team, away_team, kickoff_time, status, home_score, away_score')

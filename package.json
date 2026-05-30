@@ -4,8 +4,8 @@
   "description": "World Cup 2026 score prediction app for friends.",
   "type": "module",
   "scripts": {
-    "start": "vercel dev",
-    "deploy": "vercel deploy"
+  "vercel-dev": "dotenv -e .env.local -- vercel dev",
+  "deploy": "vercel deploy"
   },
   "keywords": [
     "world-cup",
@@ -19,6 +19,7 @@
     "@supabase/supabase-js": "^2.106.1"
   },
   "devDependencies": {
+    "dotenv-cli": "^11.0.0",
     "vercel": "^54.4.1"
   }
 }

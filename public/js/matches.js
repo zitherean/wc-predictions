@@ -1,6 +1,6 @@
 import { supabase } from './supabase-client.js';
 import { formatMatchDate, showMessage } from './utils.js';
-// import { savePrediction } from './predictions.js';
+import { fetchPredictions, savePrediction } from './predictions.js';
 
 const matchesList = document.querySelector('#matches-list');
 const refreshButton = document.querySelector('#refresh-matches');
@@ -31,7 +31,7 @@ function canEditMatch(match) {
   return Date.now() < kickoff;
 }
 
-function renderMatches(matches) {
+function renderMatches(matches, predictions) {
   if (!matchesList) return;
   if (!matches || matches.length === 0) {
     renderEmpty('No matches are available yet.');
@@ -46,6 +46,7 @@ function renderMatches(matches) {
     const matchDate = formatMatchDate(match.kickoff_time);
     const status = match.status || (canEditMatch(match) ? 'Upcoming' : 'Finished');
     const locked = !canEditMatch(match);
+    const prediction = predictions[match.id] || {};
 
     card.innerHTML = `
       <div class="match-header">
@@ -60,12 +61,12 @@ function renderMatches(matches) {
         <div class="match-score">
           <label>
             <span class="muted-label">${match.home_team}</span>
-            <input type="number" min="0" step="1" data-match-id="${match.id}" data-side="home" value="${match.home_score ?? ''}" ${locked ? 'disabled' : ''} />
+            <input type="number" min="0" step="1" data-match-id="${match.id}" data-side="home" value="${prediction.predicted_home_score ?? ''}" ${locked ? 'disabled' : ''} />
           </label>
           <span style="text-align:center; color: var(--muted);">-</span>
           <label>
             <span class="muted-label">${match.away_team}</span>
-            <input type="number" min="0" step="1" data-match-id="${match.id}" data-side="away" value="${match.away_score ?? ''}" ${locked ? 'disabled' : ''} />
+            <input type="number" min="0" step="1" data-match-id="${match.id}" data-side="away" value="${prediction.predicted_away_score ?? ''}" ${locked ? 'disabled' : ''} />
           </label>
         </div>
       </div>
@@ -125,7 +126,16 @@ async function initMatchesPage() {
 
 async function loadAndRenderMatches() {
   const matches = await fetchMatches();
-  renderMatches(matches);
+  const matchIds = matches.map((match) => match.id).filter(Boolean);
+  let predictions = {};
+
+  try {
+    predictions = await fetchPredictions(matchIds);
+  } catch (error) {
+    console.warn('Unable to load predictions:', error);
+  }
+
+  renderMatches(matches, predictions);
 }
 
 window.addEventListener('DOMContentLoaded', initMatchesPage);

@@ -68,6 +68,8 @@ Fetches upcoming matches and match results from the football API. It then insert
 
 Calculates points for users based on their predictions and the final match results. This can be called after match results are updated, either manually from the admin page or automatically after syncing matches.
 
+In knockout rounds, the scoring uses the standard 5-3-0 system and adds a bonus +2 points when a user correctly predicts which team advances.
+
 ---
 
 ### `public/`

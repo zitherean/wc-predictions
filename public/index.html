@@ -1,1 +1,64 @@
-<script type="module" src="./js/auth.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIFA WC 2026 Predictions</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">FIFA WC 2026 Predictions</a>
+    <div class="header-meta">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <span class="page-title-inline" data-i18n="page.signIn">Sign in</span>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+      <div class="options-menu" hidden>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.theme">Theme</span>
+          <button type="button" id="theme-toggle" class="button button-secondary" aria-label="Toggle theme">🌙 Dark</button>
+        </div>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.language">Language</span>
+          <select id="language-select" class="select-field">
+            <option value="en">🇬🇧 English</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="es">🇪🇸 Español</option>
+          </select>
+        </div>
+        <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a>
+      <a href="matches.html" data-i18n="nav.matches">Matches</a>
+      <a href="rules.html" data-i18n="nav.rules">Rules</a>
+      <a href="admin.html" data-i18n="nav.admin">Admin</a>
+    </nav>
+  </header>
+
+  <main class="page-shell page-home">
+    <section class="card auth-card" style="max-width:520px; margin:0 auto 2.4rem;">
+      <h2 data-i18n="page.signIn">Sign in</h2>
+      <form id="sign-in-form">
+        <label><span data-i18n="auth.username">Username</span><input type="text" name="username" required placeholder=" " autocomplete="username" /></label>
+        <label><span data-i18n="auth.password">Password</span><input type="password" name="password" required placeholder="Enter password" autocomplete="current-password" /></label>
+        <div style="display:flex; gap:0.75rem; align-items:center; margin-top:0.6rem;">
+          <button class="button button-blue" type="submit" data-i18n="auth.signInButton">Sign in</button>
+          <a class="button button-secondary" href="signup.html" data-i18n="auth.signUpLink">Sign up</a>
+        </div>
+      </form>
+
+      <section class="card status-card" style="margin-top:1.25rem;">
+        <div id="auth-status" class="status-panel">Loading authentication status...</div>
+      </section>
+    </section>
+  </main>
+
+  <script src="js/nav-toggle.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/index.js"></script>
+</body>
+</html>

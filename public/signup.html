@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rules | FIFA WC 2026 Predictions</title>
+  <title>Sign up | FIFA WC 2026 Predictions</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -11,7 +11,7 @@
     <a class="brand" href="index.html">FIFA WC 2026 Predictions</a>
     <div class="header-meta">
       <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
-      <span class="page-title-inline" data-i18n="page.rules">Rules</span>
+      <span class="page-title-inline" data-i18n="page.signUp">Sign up</span>
     </div>
     <div class="header-actions">
       <button type="button" class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
@@ -34,37 +34,32 @@
     <nav class="site-nav">
       <a href="leaderboard.html" data-i18n="nav.leaderboard">Leaderboard</a>
       <a href="matches.html" data-i18n="nav.matches">Matches</a>
-      <a href="rules.html" aria-current="page" data-i18n="nav.rules">Rules</a>
+      <a href="rules.html" data-i18n="nav.rules">Rules</a>
       <a href="admin.html" data-i18n="nav.admin">Admin</a>
     </nav>
   </header>
 
-  <main class="page-shell page-rules">
-    <section class="card rules-card">
-      <h2>Scoring</h2>
-      <ul>
-        <li><strong>Exact score:</strong> 5 points.</li>
-        <li><strong>Correct result:</strong> 3 points for the right winner or draw.</li>
-        <li><strong>Knockout bonus:</strong> +2 points for correctly guessing the team that advances.</li>
-        <li><strong>Wrong result:</strong> 0 points.</li>
-      </ul>
-      <p>Knockout matches still use the 5-3-0 scoring base, but a correct advance prediction earns an extra 2 points even when the match is decided by penalties.</p>
+  <main class="page-shell page-signup">
+    <section class="card auth-card" style="max-width:520px; margin:0 auto 2.4rem;">
+      <h2 data-i18n="auth.createAccount">Create account</h2>
+      <form id="sign-up-form">
+        <p class="form-warning"><b>Warning!</b> Do not use any real username or password that you use elsewhere. Choose unique credentials to protect your privacy and security.</p><br>
+        <label><span data-i18n="auth.username">Username</span><input type="text" name="username" required placeholder="Choose a username" autocomplete="username" /></label>
+        <label><span data-i18n="auth.password">Password</span><input type="password" name="password" required placeholder="Create password" autocomplete="new-password" /></label>
+        <div style="display:flex; gap:0.75rem; align-items:center; margin-top:0.6rem;">
+          <button class="button button-primary" type="submit" data-i18n="auth.createAccountButton">Create account</button>
+          <a class="button button-secondary" href="index.html" data-i18n="auth.backToSignIn">Back to sign in</a>
+        </div>
+      </form>
 
-      <h2>Prediction deadlines</h2>
-      <p>You can update predictions until kickoff time. Once the match has started, the score fields are locked.</p>
-
-      <h2>Match status</h2>
-      <ul>
-        <li><strong>Upcoming:</strong> Predictions are open.</li>
-        <li><strong>Live:</strong> Match is in progress.</li>
-        <li><strong>Finished:</strong> Results are final.</li>
-      </ul>
-
-      <h2>Fair play</h2>
-      <p>This is a friendly game with no real money involved. Predict honestly and enjoy the competition.</p>
+      <section class="card status-card" style="margin-top:1.25rem;">
+        <div id="auth-status" class="status-panel">Ready to create an account.</div>
+      </section>
     </section>
   </main>
+
   <script src="js/nav-toggle.js"></script>
+  <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/index.js"></script>
 </body>
 </html>

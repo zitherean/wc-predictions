@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard | FIFA WC 2026 Predictions</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">FIFA WC 2026 Predictions</a>
+    <div class="header-meta">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <span class="page-title-inline" data-i18n="page.leaderboard">Leaderboard</span>
+    </div>
+    <div class="header-actions">
+      <button id="refresh-leaderboard" class="button button-secondary icon-button" aria-label="Refresh leaderboard" data-i18n-title="action.refresh">↻</button>
+      <button type="button" class="options-toggle" aria-label="Open options" aria-haspopup="true" aria-expanded="false">⚙</button>
+      <div class="options-menu" hidden>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.theme">Theme</span>
+          <button type="button" id="theme-toggle" class="button button-secondary" aria-label="Toggle theme">🌙 Dark</button>
+        </div>
+        <div class="options-group">
+          <span class="options-label" data-i18n="options.language">Language</span>
+          <select id="language-select" class="select-field">
+            <option value="en">🇬🇧 English</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="es">🇪🇸 Español</option>
+          </select>
+        </div>
+        <button id="sign-out-quick" class="button button-tertiary" data-i18n="action.signOut">Sign out</button>
+      </div>
+    </div>
+    <nav class="site-nav">
+      <a href="leaderboard.html" aria-current="page" data-i18n="nav.leaderboard">Leaderboard</a>
+      <a href="matches.html" data-i18n="nav.matches">Matches</a>
+      <a href="rules.html" data-i18n="nav.rules">Rules</a>
+      <a href="admin.html" data-i18n="nav.admin">Admin</a>
+    </nav>
+  </header>
+
+  <main class="page-shell page-leaderboard">
+    <section class="card leaderboard-card">
+      <table class="leaderboard-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr><td colspan="3">Loading leaderboard...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="js/nav-toggle.js"></script>
+  <script type="module" src="js/leaderboard.js"></script>
+  <script type="module" src="js/index.js"></script>
+</body>
+</html>

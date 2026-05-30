@@ -1,17 +1,12 @@
-import { supabase, hasSupabaseConfig } from './supabase-client.js';
+import { supabase } from './supabase-client.js';
 
 const leaderboardBody = document.querySelector('#leaderboard-body');
 const refreshButton = document.querySelector('#refresh-leaderboard');
 
 async function loadLeaderboard() {
-  if (!hasSupabaseConfig) {
-    renderFallback('Configure Supabase in public/js/config.js to view leaderboard data.');
-    return;
-  }
-
   const { data, error } = await supabase
-    .from('profiles')
-    .select('id, username, total_points')
+    .from('leaderboard')
+    .select('id, display_name, unique_id, total_points, predictions_count')
     .order('total_points', { ascending: false })
     .limit(50);
 
@@ -26,13 +21,16 @@ async function loadLeaderboard() {
   }
 
   leaderboardBody.innerHTML = '';
+
   data.forEach((row, index) => {
     const tr = document.createElement('tr');
+
     tr.innerHTML = `
       <td>${index + 1}</td>
-      <td>${row.username || row.id}</td>
+      <td>${row.display_name}</td>
       <td>${row.total_points ?? 0}</td>
     `;
+
     leaderboardBody.appendChild(tr);
   });
 }
@@ -46,5 +44,6 @@ window.addEventListener('DOMContentLoaded', () => {
   if (refreshButton) {
     refreshButton.addEventListener('click', loadLeaderboard);
   }
+
   loadLeaderboard();
 });

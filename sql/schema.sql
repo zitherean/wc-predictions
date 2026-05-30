@@ -52,3 +52,20 @@ create table if not exists public.predictions (
   constraint predicted_home_score_non_negative check (predicted_home_score >= 0),
   constraint predicted_away_score_non_negative check (predicted_away_score >= 0)
 );
+
+-- Leaderboard view to query
+create or replace view public.leaderboard as
+select
+  profiles.id,
+  profiles.display_name,
+  profiles.unique_id,
+  coalesce(sum(predictions.points), 0) as total_points,
+  count(predictions.id) as predictions_count
+from public.profiles
+left join public.predictions
+  on predictions.user_id = profiles.id
+group by
+  profiles.id,
+  profiles.display_name,
+  profiles.unique_id
+order by total_points desc;

@@ -2,7 +2,9 @@
 create extension if not exists "pgcrypto";
 
 -- Drop existing tables
+drop view if exists public.leaderboard;
 drop table if exists public.predictions;
+drop table if exists public.matches;
 drop table if exists public.profiles;
 
 -- User profile table

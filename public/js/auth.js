@@ -1,43 +1,59 @@
-import { supabase, hasSupabaseConfig } from './supabase-client.js';
+import { supabase } from "./supabase-client.js";
 import { showMessage } from './utils.js';
 
 const statusContainer = document.querySelector('#auth-status');
 const signOutButton = document.querySelector('#sign-out');
 
-export async function getUser() {
-  if (!hasSupabaseConfig) return null;
-  const { data } = await supabase.auth.getSession();
-  return data.session?.user || null;
+function normalizeUniqueId(uniqueId) {
+  return String(uniqueId ?? '').trim().toLowerCase();
+}
+
+function validateUsername(username) {
+  const value = String(username ?? '').trim();
+  if (!/^[a-zA-Z0-9_]{3,}$/.test(value)) {
+    throw new Error('Username must be at least 3 characters and contain only letters, numbers, or underscore.');
+  }
+  return value;
+}
+
+function validateDisplayName(displayName) {
+  const value = String(displayName ?? '').trim();
+  if (!value) {
+    throw new Error('Display name is required.');
+  }
+  return value;
 }
 
 function usernameToEmail(username) {
-  // create a synthetic email to satisfy Supabase auth
-  const clean = String(username).trim().toLowerCase().replace(/[^a-z0-9._-]/g, '_');
+  const clean = normalizeUniqueId(username).replace(/[^a-z0-9._-]/g, '_');
   return `${clean}@wc-predictions.local`;
 }
 
 export async function signInWithUsername(username, password) {
-  if (!hasSupabaseConfig) throw new Error('Supabase config is not set.');
+  validateUsername(username);
   const email = usernameToEmail(username);
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) throw error;
   return true;
 }
 
-export async function signUpWithUsername(username, password) {
-  if (!hasSupabaseConfig) throw new Error('Supabase config is not set.');
-  const email = usernameToEmail(username);
+export async function signUpWithUsername(username, password, displayName) {
+  const uniqueId = validateUsername(username);
+  const safeDisplayName = validateDisplayName(displayName);
+  const email = usernameToEmail(uniqueId);
+
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) throw error;
 
-  // attempt to create/update the public profile row
   try {
     const userId = data.user?.id;
     if (userId) {
-      await supabase.from('profiles').upsert({ id: userId, username: username, total_points: 0 }, { onConflict: ['id'] });
+      await supabase.from('profiles').upsert(
+        { id: userId, unique_id: uniqueId, display_name: safeDisplayName },
+        { onConflict: ['id'] }
+      );
     }
   } catch (err) {
-    // non-fatal - show message but allow account creation to proceed
     console.warn('profile upsert failed', err?.message || err);
   }
 
@@ -45,8 +61,12 @@ export async function signUpWithUsername(username, password) {
 }
 
 export async function signOut() {
-  if (!hasSupabaseConfig) return;
   await supabase.auth.signOut();
+}
+
+export async function getUser() {
+  const { data } = await supabase.auth.getSession();
+  return data.session?.user || null;
 }
 
 export async function initAuthForms() {
@@ -75,8 +95,9 @@ export async function initAuthForms() {
       const form = new FormData(signUpForm);
       const username = form.get('username');
       const password = form.get('password');
+      const displayName = form.get('displayName');
       try {
-        await signUpWithUsername(username, password);
+        await signUpWithUsername(username, password, displayName);
         showMessage(statusContainer, 'Account created. You can now sign in.', 'success');
         window.location.href = 'index.html';
       } catch (error) {
@@ -95,18 +116,13 @@ export async function initAuthForms() {
 
 export async function renderUserStatus() {
   if (!statusContainer) return;
-  if (!hasSupabaseConfig) {
-    showMessage(statusContainer, 'Supabase config is missing. Fill in public/js/config.js before using this app.', 'warning');
-    return;
-  }
 
   const user = await getUser();
   if (user) {
-    // try to show username from profiles table
     let display = user.email || user.id;
     try {
-      const { data } = await supabase.from('profiles').select('username').eq('id', user.id).single();
-      if (data?.username) display = data.username;
+      const { data } = await supabase.from('profiles').select('display_name').eq('id', user.id).single();
+      if (data?.display_name) display = data.display_name;
     } catch (err) {
       // ignore
     }

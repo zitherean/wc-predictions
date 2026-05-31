@@ -1,19 +1,17 @@
-import { supabase, hasSupabaseConfig } from './supabase-client.js';
+import { supabase } from './supabase-client.js';
 
 export async function getCurrentUserId() {
-  if (!hasSupabaseConfig) return null;
   const { data } = await supabase.auth.getSession();
   return data.session?.user?.id || null;
 }
 
 export async function fetchPredictions(matchIds) {
-  if (!hasSupabaseConfig) return {};
   const userId = await getCurrentUserId();
-  if (!userId) return {};
+  if (!userId || !matchIds || matchIds.length === 0) return {};
 
   const { data, error } = await supabase
     .from('predictions')
-    .select('match_id, predicted_home, predicted_away')
+    .select('match_id, predicted_home_score, predicted_away_score')
     .eq('user_id', userId)
     .in('match_id', matchIds);
 
@@ -28,22 +26,22 @@ export async function fetchPredictions(matchIds) {
 }
 
 export async function savePrediction(matchId, home, away) {
-  if (!hasSupabaseConfig) {
-    throw new Error('Supabase config is not set.');
-  }
-
   const userId = await getCurrentUserId();
   if (!userId) {
     throw new Error('You must be signed in to save a prediction.');
   }
 
-  const payload = {
-    user_id: userId,
-    match_id: Number(matchId),
-    predicted_home: home,
-    predicted_away: away,
-  };
+  const { error } = await supabase.from('predictions').upsert(
+    {
+      user_id: userId,
+      match_id: matchId,
+      predicted_home_score: home,
+      predicted_away_score: away,
+    },
+    { onConflict: ['user_id', 'match_id'] }
+  );
 
-  const { error } = await supabase.from('predictions').upsert(payload, { onConflict: ['user_id', 'match_id'] });
-  if (error) throw error;
+  if (error) {
+    throw error;
+  }
 }

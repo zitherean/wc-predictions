@@ -8,6 +8,7 @@ node_modules/
 
 # Vercel
 .vercel/
+.vercel
 
 # Logs
 npm-debug.log*

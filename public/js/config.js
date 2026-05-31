@@ -1,2 +1,2 @@
-export const SUPABASE_URL = '<YOUR_SUPABASE_URL>'; // Replace with your Supabase project URL
-export const SUPABASE_ANON_KEY = '<YOUR_SUPABASE_ANON_KEY>'; // Replace with your Supabase anon key
+export const SUPABASE_URL = "https://fmaubjfmbrvgyjvhrqxg.supabase.co";
+export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtYXViamZtYnJ2Z3lqdmhycXhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjA1NjIsImV4cCI6MjA5NTI5NjU2Mn0.N76dPxbvQ7-NvXUPvVHDG5vCW1H7GbQ4EtSR2nZyi_Y";

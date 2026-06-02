@@ -42,19 +42,47 @@ export async function signUpWithUsername(username, password, displayName) {
   const safeDisplayName = validateDisplayName(displayName);
   const email = usernameToEmail(uniqueId);
 
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw error;
+  // Optional pre-check for display name
+  const { data: existingDisplayName, error: checkError } = await supabase
+    .from('profiles')
+    .select('id')
+    .ilike('display_name', safeDisplayName)
+    .maybeSingle();
 
-  try {
-    const userId = data.user?.id;
-    if (userId) {
-      await supabase.from('profiles').upsert(
-        { id: userId, unique_id: uniqueId, display_name: safeDisplayName },
-        { onConflict: ['id'] }
-      );
+  if (checkError) {
+    throw checkError;
+  }
+
+  if (existingDisplayName) {
+    throw new Error('This display name is already taken. Please choose another one.');
+  }
+
+  const { data, error } = await supabase.auth.signUp({ email, password });
+
+  if (error) {
+    throw error;
+  }
+
+  const userId = data.user?.id;
+
+  if (!userId) {
+    throw new Error('Account was created, but no user ID was returned.');
+  }
+
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .insert({
+      id: userId,
+      unique_id: uniqueId,
+      display_name: safeDisplayName
+    });
+
+  if (profileError) {
+    if (profileError.code === '23505') {
+      throw new Error('Username or display name is already taken.');
     }
-  } catch (err) {
-    console.warn('profile upsert failed', err?.message || err);
+
+    throw profileError;
   }
 
   return true;

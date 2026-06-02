@@ -18,8 +18,12 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now(),
 
   constraint unique_id_min_length check (char_length(unique_id) >= 3),
-  constraint unique_id_format check (unique_id ~ '^[a-zA-Z0-9_]+$')
+  constraint unique_id_format check (unique_id ~ '^[a-zA-Z0-9_]+$'),
+  constraint display_name_min_length check (char_length(trim(display_name)) >= 2)
 );
+
+create unique index if not exists unique_display_name_lower
+on public.profiles (lower(display_name));
 
 -- World Cup matches table
 create table if not exists public.matches (

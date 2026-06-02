@@ -37,27 +37,57 @@ export async function signInWithUsername(username, password) {
   return true;
 }
 
+export async function checkDisplayNameAvailable(displayName) {
+  const value = validateDisplayName(displayName);
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id')
+    .ilike('display_name', value)
+    .maybeSingle();
+  if (error) throw error;
+  return !data;
+}
+
 export async function signUpWithUsername(username, password, displayName) {
-  const uniqueId = validateUsername(username);
+  const uniqueId = normalizeUniqueId(validateUsername(username));
   const safeDisplayName = validateDisplayName(displayName);
   const email = usernameToEmail(uniqueId);
 
-  // Optional pre-check for display name
-  const { data: existingDisplayName, error: checkError } = await supabase
+  // 1. Check if username already exists
+  const { data: existingUsername, error: usernameCheckError } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('unique_id', uniqueId)
+    .maybeSingle();
+
+  if (usernameCheckError) {
+    throw usernameCheckError;
+  }
+
+  if (existingUsername) {
+    throw new Error('This username is already taken. Please choose another one.');
+  }
+
+  // 2. Check if display name already exists, case-insensitive
+  const { data: existingDisplayName, error: displayNameCheckError } = await supabase
     .from('profiles')
     .select('id')
     .ilike('display_name', safeDisplayName)
     .maybeSingle();
 
-  if (checkError) {
-    throw checkError;
+  if (displayNameCheckError) {
+    throw displayNameCheckError;
   }
 
   if (existingDisplayName) {
     throw new Error('This display name is already taken. Please choose another one.');
   }
 
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  // 3. Only now create the Supabase Auth user
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password
+  });
 
   if (error) {
     throw error;
@@ -69,6 +99,7 @@ export async function signUpWithUsername(username, password, displayName) {
     throw new Error('Account was created, but no user ID was returned.');
   }
 
+  // 4. Create the profile row
   const { error: profileError } = await supabase
     .from('profiles')
     .insert({

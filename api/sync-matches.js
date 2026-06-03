@@ -44,6 +44,19 @@ function mapStatus(apiStatus) {
   }
 }
 
+function mapWinnerSide(apiWinner) {
+  switch (apiWinner) {
+    case "HOME_TEAM":
+      return "home";
+    case "AWAY_TEAM":
+      return "away";
+    case "DRAW":
+      return "draw";
+    default:
+      return null;
+  }
+}
+
 function extractScore(match) {
   const fullTime = match.score?.fullTime;
 
@@ -65,6 +78,7 @@ function mapApiMatchToDatabaseMatch(match) {
     status: mapStatus(match.status),
     home_score,
     away_score,
+    winner_side: mapWinnerSide(match.score?.winner),
     last_synced_at: new Date().toISOString()
   };
 }

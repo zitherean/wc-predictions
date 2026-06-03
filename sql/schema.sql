@@ -36,6 +36,7 @@ create table if not exists public.matches (
   status text not null default 'scheduled',
   home_score int,
   away_score int,
+  winner_side text,
   last_synced_at timestamptz,
   created_at timestamptz not null default now()
 );

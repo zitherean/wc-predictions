@@ -212,4 +212,3 @@ export async function isCurrentUserAdmin() {
 
   return profile.is_admin === true;
 }
-\

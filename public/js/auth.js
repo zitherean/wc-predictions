@@ -190,3 +190,26 @@ export async function renderUserStatus() {
     showMessage(statusContainer, 'Not signed in. Use the form above or go to Matches once signed in.');
   }
 }
+
+export async function isCurrentUserAdmin() {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError || !sessionData.session?.user) {
+    return false;
+  }
+
+  const userId = sessionData.session.user.id;
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', userId)
+    .single();
+
+  if (profileError || !profile) {
+    return false;
+  }
+
+  return profile.is_admin === true;
+}
+\

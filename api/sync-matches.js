@@ -69,8 +69,62 @@ function mapApiMatchToDatabaseMatch(match) {
   };
 }
 
+async function requireAdmin(request, supabase) {
+  const authHeader = request.headers.authorization || '';
+  const token = authHeader.replace('Bearer ', '');
+
+  if (!token) {
+    return {
+      ok: false,
+      status: 401,
+      error: 'Missing authorization token.'
+    };
+  }
+
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser(token);
+
+  if (userError || !user) {
+    return {
+      ok: false,
+      status: 401,
+      error: 'Invalid or expired session.'
+    };
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('is_admin, display_name')
+    .eq('id', user.id)
+    .single();
+
+  if (profileError) {
+    return {
+      ok: false,
+      status: 500,
+      error: 'Unable to check admin profile.'
+    };
+  }
+
+  if (!profile?.is_admin) {
+    return {
+      ok: false,
+      status: 403,
+      error: 'Admin access required.'
+    };
+  }
+
+  return {
+    ok: true,
+    user,
+    profile
+  };
+}
+
 export default async function handler(request, response) {
-  if (request.method !== "POST" && request.method !== "GET") {
+  if (request.method !== "POST") {
     return response.status(405).json({
       error: "Method not allowed"
     });
@@ -83,6 +137,16 @@ export default async function handler(request, response) {
   ) {
     return response.status(500).json({
       error: "Missing required environment variables."
+    });
+  }
+
+  const supabase = createServerSupabaseClient();
+
+  const adminCheck = await requireAdmin(request, supabase);
+
+  if (!adminCheck.ok) {
+    return response.status(adminCheck.status).json({
+      error: adminCheck.error
     });
   }
 
@@ -135,8 +199,6 @@ export default async function handler(request, response) {
   const apiData = await apiResponse.json();
 
   const matches = apiData.matches.map(mapApiMatchToDatabaseMatch);
-
-  const supabase = createServerSupabaseClient();
 
   const { data, error } = await supabase
     .from("matches")

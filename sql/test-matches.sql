@@ -69,6 +69,18 @@ values
 
   -- KNOCKOUT TESTS
 
+  (
+    'test_ko_032',
+    'Switzerland',
+    'Algeria',
+    '2026-07-03 19:00:00+00',
+    'Round of 32',
+    'finished',
+    5,
+    1,
+    'home'
+  ),
+
   -- Knockout exact score + correct advancing team
   -- prediction 2-1 should get 7: 5 exact + 2 bonus
   -- prediction 1-0 should get 5: 3 correct result + 2 bonus

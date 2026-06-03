@@ -48,6 +48,7 @@ create table if not exists public.predictions (
   match_id uuid not null references public.matches(id) on delete cascade,
   predicted_home_score int not null,
   predicted_away_score int not null,
+  predicted_winner_side text,
   points int not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -57,7 +58,14 @@ create table if not exists public.predictions (
 
   -- Basic score validation
   constraint predicted_home_score_non_negative check (predicted_home_score >= 0),
-  constraint predicted_away_score_non_negative check (predicted_away_score >= 0)
+  constraint predicted_away_score_non_negative check (predicted_away_score >= 0),
+
+  -- Predicted winner can only be null or teams playing in the match 
+  constraint predicted_winner_side_valid
+  check (
+    predicted_winner_side is null
+    or predicted_winner_side in ('home', 'away')
+  )
 );
 
 -- Leaderboard view to query

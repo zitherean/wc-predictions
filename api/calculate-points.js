@@ -67,6 +67,9 @@ function isKnockoutMatch(stage) {
   const normalizedStage = stage.toLowerCase();
 
   return (
+    normalizedStage.includes("last_32") ||
+    normalizedStage.includes("round_of_32") ||
+    normalizedStage.includes("round of 32") ||
     normalizedStage.includes("last_16") ||
     normalizedStage.includes("round_of_16") ||
     normalizedStage.includes("round of 16") ||
@@ -123,10 +126,12 @@ function calculatePredictionPoints(prediction) {
 
   if (knockout) {
     const actualAdvancingSide = match.winner_side || actualResult;
+    const predictedAdvancingSide =
+      prediction.predicted_winner_side || predictedResult;
 
     if (
-      actualAdvancingSide !== "draw" &&
-      predictedResult === actualAdvancingSide
+      actualAdvancingSide !== 'draw' &&
+      predictedAdvancingSide === actualAdvancingSide
     ) {
       points += 2;
     }
@@ -164,6 +169,7 @@ export default async function handler(request, response) {
       id,
       predicted_home_score,
       predicted_away_score,
+      predicted_winner_side,
       points,
       matches (
         id,
@@ -173,7 +179,7 @@ export default async function handler(request, response) {
         away_score,
         winner_side
       )
-    `);
+  `);
 
   if (fetchError) {
     return response.status(500).json({

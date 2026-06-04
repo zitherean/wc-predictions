@@ -1,4 +1,4 @@
-import { initAuthForms, renderUserStatus, signOut } from './auth.js';
+import { initAuthForms, renderUserStatus, signOut, isCurrentUserAdmin } from './auth.js';
 
 const i18n = {
   en: {
@@ -183,11 +183,23 @@ function initOptionsMenu() {
   }
 }
 
+async function toggleAdminNavVisibility() {
+  const adminLinks = document.querySelectorAll('.admin-only-nav');
+  if (!adminLinks.length) return;
+
+  const isAdmin = await isCurrentUserAdmin();
+
+  adminLinks.forEach((link) => {
+    link.hidden = !isAdmin;
+  });
+}
+
 async function initializeApp() {
   console.log('initializeApp start');
   try {
     initAuthForms();
     await renderUserStatus();
+    await toggleAdminNavVisibility();
   } catch (error) {
     console.warn('Error during auth initialization:', error);
   }
@@ -224,4 +236,3 @@ if (document.readyState === 'loading') {
 } else {
   initializeApp();
 }
-

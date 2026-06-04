@@ -37,24 +37,83 @@ export async function signInWithUsername(username, password) {
   return true;
 }
 
+export async function checkDisplayNameAvailable(displayName) {
+  const value = validateDisplayName(displayName);
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id')
+    .ilike('display_name', value)
+    .maybeSingle();
+  if (error) throw error;
+  return !data;
+}
+
 export async function signUpWithUsername(username, password, displayName) {
-  const uniqueId = validateUsername(username);
+  const uniqueId = normalizeUniqueId(validateUsername(username));
   const safeDisplayName = validateDisplayName(displayName);
   const email = usernameToEmail(uniqueId);
 
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw error;
+  // 1. Check if username already exists
+  const { data: existingUsername, error: usernameCheckError } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('unique_id', uniqueId)
+    .maybeSingle();
 
-  try {
-    const userId = data.user?.id;
-    if (userId) {
-      await supabase.from('profiles').upsert(
-        { id: userId, unique_id: uniqueId, display_name: safeDisplayName },
-        { onConflict: ['id'] }
-      );
+  if (usernameCheckError) {
+    throw usernameCheckError;
+  }
+
+  if (existingUsername) {
+    throw new Error('This username is already taken. Please choose another one.');
+  }
+
+  // 2. Check if display name already exists, case-insensitive
+  const { data: existingDisplayName, error: displayNameCheckError } = await supabase
+    .from('profiles')
+    .select('id')
+    .ilike('display_name', safeDisplayName)
+    .maybeSingle();
+
+  if (displayNameCheckError) {
+    throw displayNameCheckError;
+  }
+
+  if (existingDisplayName) {
+    throw new Error('This display name is already taken. Please choose another one.');
+  }
+
+  // 3. Only now create the Supabase Auth user
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  const userId = data.user?.id;
+
+  if (!userId) {
+    throw new Error('Account was created, but no user ID was returned.');
+  }
+
+  // 4. Create the profile row
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .insert({
+      id: userId,
+      unique_id: uniqueId,
+      display_name: safeDisplayName
+    });
+
+  if (profileError) {
+    if (profileError.code === '23505') {
+      throw new Error('Account could not be completed because the username or display name was already taken. Please contact the admin or try a different username.');
     }
-  } catch (err) {
-    console.warn('profile upsert failed', err?.message || err);
+
+    throw new Error(`Account was created, but profile setup failed: ${profileError.message}`);
   }
 
   return true;
@@ -130,4 +189,26 @@ export async function renderUserStatus() {
   } else {
     showMessage(statusContainer, 'Not signed in. Use the form above or go to Matches once signed in.');
   }
+}
+
+export async function isCurrentUserAdmin() {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError || !sessionData.session?.user) {
+    return false;
+  }
+
+  const userId = sessionData.session.user.id;
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', userId)
+    .single();
+
+  if (profileError || !profile) {
+    return false;
+  }
+
+  return profile.is_admin === true;
 }

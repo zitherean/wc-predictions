@@ -7,11 +7,14 @@ export async function getCurrentUserId() {
 
 export async function fetchPredictions(matchIds) {
   const userId = await getCurrentUserId();
-  if (!userId || !matchIds || matchIds.length === 0) return {};
+
+  if (!userId || !matchIds || matchIds.length === 0) {
+    return {};
+  }
 
   const { data, error } = await supabase
     .from('predictions')
-    .select('match_id, predicted_home_score, predicted_away_score')
+    .select('match_id, predicted_home_score, predicted_away_score, predicted_winner_side')
     .eq('user_id', userId)
     .in('match_id', matchIds);
 
@@ -25,23 +28,35 @@ export async function fetchPredictions(matchIds) {
   }, {});
 }
 
-export async function savePrediction(matchId, home, away) {
-  const userId = await getCurrentUserId();
-  if (!userId) {
-    throw new Error('You must be signed in to save a prediction.');
+export async function savePrediction(matchId, homeScore, awayScore, predictedWinnerSide = null) {
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    throw new Error('You must be logged in to save a prediction.');
   }
 
-  const { error } = await supabase.from('predictions').upsert(
-    {
-      user_id: userId,
-      match_id: matchId,
-      predicted_home_score: home,
-      predicted_away_score: away,
-    },
-    { onConflict: ['user_id', 'match_id'] }
-  );
+  const { data, error } = await supabase
+    .from('predictions')
+    .upsert(
+      {
+        user_id: user.id,
+        match_id: matchId,
+        predicted_home_score: homeScore,
+        predicted_away_score: awayScore,
+        predicted_winner_side: predictedWinnerSide
+      },
+      {
+        onConflict: 'user_id,match_id'
+      }
+    )
+    .select();
 
   if (error) {
     throw error;
   }
+
+  return data;
 }

@@ -18,8 +18,12 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now(),
 
   constraint unique_id_min_length check (char_length(unique_id) >= 3),
-  constraint unique_id_format check (unique_id ~ '^[a-zA-Z0-9_]+$')
+  constraint unique_id_format check (unique_id ~ '^[a-zA-Z0-9_]+$'),
+  constraint display_name_min_length check (char_length(trim(display_name)) >= 2)
 );
+
+create unique index if not exists unique_display_name_lower
+on public.profiles (lower(display_name));
 
 -- World Cup matches table
 create table if not exists public.matches (
@@ -32,6 +36,7 @@ create table if not exists public.matches (
   status text not null default 'scheduled',
   home_score int,
   away_score int,
+  winner_side text,
   last_synced_at timestamptz,
   created_at timestamptz not null default now()
 );
@@ -43,6 +48,7 @@ create table if not exists public.predictions (
   match_id uuid not null references public.matches(id) on delete cascade,
   predicted_home_score int not null,
   predicted_away_score int not null,
+  predicted_winner_side text,
   points int not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -52,7 +58,14 @@ create table if not exists public.predictions (
 
   -- Basic score validation
   constraint predicted_home_score_non_negative check (predicted_home_score >= 0),
-  constraint predicted_away_score_non_negative check (predicted_away_score >= 0)
+  constraint predicted_away_score_non_negative check (predicted_away_score >= 0),
+
+  -- Predicted winner can only be null or teams playing in the match 
+  constraint predicted_winner_side_valid
+  check (
+    predicted_winner_side is null
+    or predicted_winner_side in ('home', 'away')
+  )
 );
 
 -- Leaderboard view to query

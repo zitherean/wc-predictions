@@ -386,16 +386,28 @@ input:focus {
   gap: 0.75rem;
 }
 
-.match-teams {
-  display: grid;
-  gap: 0.4rem;
-}
-
 .match-score {
   display: grid;
-  grid-template-columns: 5rem 2rem 5rem;
+  grid-template-columns: minmax(0, 1fr) 2rem minmax(0, 1fr);
   gap: 0.75rem;
+  align-items: stretch;
+}
+
+.team-score-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.team-info {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+.team-flag {
+  font-size: 1.25rem;
 }
 
 .match-score input {

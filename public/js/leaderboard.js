@@ -1,7 +1,6 @@
 import { supabase } from './supabase-client.js';
 
 const leaderboardBody = document.querySelector('#leaderboard-body');
-const refreshButton = document.querySelector('#refresh-leaderboard');
 
 async function loadLeaderboard() {
   const { data, error } = await supabase
@@ -41,9 +40,5 @@ function renderFallback(message) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  if (refreshButton) {
-    refreshButton.addEventListener('click', loadLeaderboard);
-  }
-
   loadLeaderboard();
 });

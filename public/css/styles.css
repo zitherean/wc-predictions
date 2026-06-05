@@ -351,6 +351,9 @@ input:focus {
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
+  position: sticky;
+  top: 60px;
+  z-index: 9;
 }
 
 .page-heading h1 {
@@ -517,3 +520,50 @@ input:focus {
     margin: 1.25rem auto 2rem;
   }
 }
+
+@media (min-width: 641px) {
+  /* On wider screens keep brand inline and push actions to the far right */
+  .brand {
+    flex: 0 0 auto;
+  }
+
+  .header-meta {
+    order: 1;
+  }
+
+  .site-nav {
+    order: 2;
+    align-items: center;
+    /* push the nav to the right, before the actions */
+    margin-left: auto;
+  }
+
+  .header-actions {
+    order: 3;
+    margin-left: 0; /* actions sit to the right of the nav */
+  }
+
+  /* Keep auth cards a constant width on wider screens so status panels don't change layout */
+  .page-home .auth-card,
+  .page-signup .auth-card {
+    width: 520px;
+    max-width: calc(100% - 2rem);
+    margin: 0 auto 2.4rem;
+  }
+
+  /* show separator before page title only on desktop */
+  .page-title-inline::before {
+    content: "/ ";
+    color: var(--muted);
+    opacity: 0.9;
+    margin-right: 0.35rem;
+  }
+
+  /* transient feedback shown next to Save button */
+  .save-feedback {
+    margin-left: 0.75rem;
+    color: var(--accent);
+    font-weight: 700;
+    align-self: center;
+    opacity: 1;
+  }

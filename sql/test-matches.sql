@@ -10,6 +10,59 @@ insert into public.matches (
   winner_side
 )
 values
+
+  -- Past kickoff group stage test: kickoff has passed, match not live
+  (
+    'test_group_005_past',
+    'USA',
+    'Wales',
+    '2026-06-04 19:00:00+00',
+    'Group stage',
+    'scheduled',
+    null,
+    null,
+    null
+  ),
+
+  -- Past kickoff group stage test: kickoff has passed, match not live
+  (
+    'test_group_006_past',
+    'Colombia',
+    'Belgium',
+    '2026-06-05 08:00:00+00',
+    'Group stage',
+    'scheduled',
+    null,
+    null,
+    null
+  ),
+
+  -- Live group stage test: match is currently live/in progress
+  (
+    'test_group_007_live',
+    'USA',
+    'Japan',
+    '2026-06-05 12:00:00+00',
+    'Group stage',
+    'live',
+    1,
+    0,
+    null
+  ),
+
+  -- Live group stage test: match is currently live/in progress
+  (
+    'test_group_008_live',
+    'Morocco',
+    'Croatia',
+    '2026-06-05 13:00:00+00',
+    'Group stage',
+    'live',
+    0,
+    0,
+    null
+  ),
+
   -- GROUP STAGE TESTS
 
   -- Exact score test: prediction 2-1 should get 5

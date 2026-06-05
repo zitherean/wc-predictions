@@ -511,6 +511,26 @@ input:focus {
   font-weight: 700;
 }
 
+/* Archived matches: hidden by default, toggled with body.show-archived */
+.card.archived {
+  display: none;
+}
+
+body.show-archived .card.archived {
+  display: block;
+}
+
+/* keep match-card layout when showing archived */
+body.show-archived .card.archived.match-card {
+  display: grid;
+}
+
+.page-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.6rem;
+}
+
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;

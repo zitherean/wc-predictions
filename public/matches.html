@@ -48,6 +48,10 @@
       </div>
     </section>
 
+    <!-- Archive toggle: hidden by default; shows matches that already kicked off -->
+    <div class="page-actions">
+      <button id="toggle-archived" class="button button-secondary" aria-pressed="false">Show match archive</button>
+    </div>
     <section id="matches-list" class="grid-list">
       <div class="card empty-state">
         <p>Loading matches...</p>
@@ -57,6 +61,7 @@
 
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/matches.js"></script>
+  <script type="module" src="js/matches-archive-toggle.js"></script>
   <script type="module" src="js/index.js"></script>
 </body>
 </html>

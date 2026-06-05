@@ -7,15 +7,26 @@ function createServerSupabaseClient() {
   );
 }
 
-async function requireAdmin(request, supabase) {
-  const authHeader = request.headers.authorization || "";
-  const token = authHeader.replace("Bearer ", "");
+async function requireAdminOrCron(request, supabase) {
+  const authHeader = request.headers.authorization || '';
+
+  if (
+    process.env.CRON_SECRET &&
+    authHeader === `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return {
+      ok: true,
+      source: 'cron'
+    };
+  }
+
+  const token = authHeader.replace('Bearer ', '');
 
   if (!token) {
     return {
       ok: false,
       status: 401,
-      error: "Missing authorization token."
+      error: 'Missing authorization token.'
     };
   }
 
@@ -28,21 +39,21 @@ async function requireAdmin(request, supabase) {
     return {
       ok: false,
       status: 401,
-      error: "Invalid or expired session."
+      error: 'Invalid or expired session.'
     };
   }
 
   const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("is_admin, display_name")
-    .eq("id", user.id)
+    .from('profiles')
+    .select('is_admin, display_name')
+    .eq('id', user.id)
     .single();
 
   if (profileError) {
     return {
       ok: false,
       status: 500,
-      error: "Unable to check admin profile."
+      error: 'Unable to check admin profile.'
     };
   }
 
@@ -50,12 +61,13 @@ async function requireAdmin(request, supabase) {
     return {
       ok: false,
       status: 403,
-      error: "Admin access required."
+      error: 'Admin access required.'
     };
   }
 
   return {
     ok: true,
+    source: 'admin',
     user,
     profile
   };
@@ -155,7 +167,7 @@ export default async function handler(request, response) {
 
   const supabase = createServerSupabaseClient();
 
-  const adminCheck = await requireAdmin(request, supabase);
+  const adminCheck = await requireAdminOrCron(request, supabase);
 
   if (!adminCheck.ok) {
     return response.status(adminCheck.status).json({

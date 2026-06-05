@@ -83,8 +83,19 @@ function mapApiMatchToDatabaseMatch(match) {
   };
 }
 
-async function requireAdmin(request, supabase) {
+async function requireAdminOrCron(request, supabase) {
   const authHeader = request.headers.authorization || '';
+
+  if (
+    process.env.CRON_SECRET &&
+    authHeader === `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return {
+      ok: true,
+      source: 'cron'
+    };
+  }
+
   const token = authHeader.replace('Bearer ', '');
 
   if (!token) {
@@ -132,6 +143,7 @@ async function requireAdmin(request, supabase) {
 
   return {
     ok: true,
+    source: 'admin',
     user,
     profile
   };
@@ -156,7 +168,7 @@ export default async function handler(request, response) {
 
   const supabase = createServerSupabaseClient();
 
-  const adminCheck = await requireAdmin(request, supabase);
+  const adminCheck = await requireAdminOrCron(request, supabase);
 
   if (!adminCheck.ok) {
     return response.status(adminCheck.status).json({

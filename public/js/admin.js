@@ -50,7 +50,7 @@ async function checkAdminAccess() {
     setAccessMessage('You must sign in first. Redirecting...');
     appendLog('No active session. Redirecting to sign in.');
 
-    window.location.replace('matches.html');
+    window.location.replace('index.html');
 
     return false;
   }
@@ -61,7 +61,7 @@ async function checkAdminAccess() {
     setAccessMessage('Access denied. This page is only available to admins.');
     appendLog(`Access denied for ${profile?.display_name || session.user.id}.`);
 
-    window.location.replace('matches.html');
+    window.location.replace('index.html');
     return false;
   }
 

@@ -152,6 +152,12 @@ button {
   border-radius: 12px;
   color: var(--text);
   text-align: center;
+  color-scheme: dark;
+}
+
+.select-field option {
+  color: #0f172a;
+  background: #ffffff;
 }
 
 .icon-button {
@@ -190,6 +196,31 @@ body[data-theme='light'] input,
 body[data-theme='light'] .select-field {
   background: rgba(15, 23, 42, 0.05);
   color: #0f172a;
+  color-scheme: light;
+}
+
+body[data-theme='light'] .brand,
+body[data-theme='light'] .page-title-inline,
+body[data-theme='light'] .options-label {
+  color: #0f172a;
+}
+
+body[data-theme='light'] .options-toggle,
+body[data-theme='light'] .nav-toggle,
+body[data-theme='light'] .button-tertiary {
+  color: #0f172a;
+}
+
+body[data-theme='light'] .page-heading {
+  background: #ffffff;
+}
+
+body[data-theme='light'] {
+  background: #f8fafc !important;
+}
+
+html[data-theme='light'] {
+  background: #f8fafc !important;
 }
 
 .nav-toggle {

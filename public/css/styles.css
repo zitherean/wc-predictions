@@ -211,6 +211,14 @@ body[data-theme='light'] .button-tertiary {
   color: #0f172a;
 }
 
+body[data-theme='light'] .leaderboard-table th {
+  color: #0f172a;
+}
+
+body[data-theme='light'] .match-status {
+  color: #334155;
+}
+
 body[data-theme='light'] .page-heading {
   background: #ffffff;
 }

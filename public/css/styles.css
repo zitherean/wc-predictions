@@ -591,6 +591,31 @@ body[data-theme='light'] .advance-select.has-selection {
 
 /* Archive Format */
 
+.archive-empty-message {
+  display: block;
+  text-align: center;
+  padding: 1.4rem 1.5rem;
+  border-style: dashed;
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.archive-empty-message p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+body[data-theme='light'] .archive-empty-message {
+  background: rgba(15, 23, 42, 0.03);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+body[data-theme='light'] .archive-empty-message p {
+  color: #475569;
+}
+
 .matches-toolbar {
   display: flex;
   flex-wrap: wrap;

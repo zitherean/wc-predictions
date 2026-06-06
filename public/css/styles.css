@@ -532,6 +532,63 @@ input:focus {
   -moz-appearance: textfield;
 }
 
+/* dropdown format */
+.advance-selector {
+  margin-top: 0.8rem;
+}
+
+.advance-selector label {
+  margin-bottom: 0;
+}
+
+.muted-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.advance-select {
+  width: 100%;
+  margin-top: 0.45rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(148, 163, 184, 0.08);
+  color: var(--text);
+  font-weight: 700;
+  outline: none;
+}
+
+.advance-select:focus {
+  outline: 2px solid rgba(34, 197, 94, 0.35);
+  border-color: rgba(34, 197, 94, 0.55);
+}
+
+.advance-select.has-selection {
+  border-color: rgba(34, 197, 94, 0.7);
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.advance-select option {
+  color: #0f172a;
+  background: #ffffff;
+}
+
+body[data-theme='light'] .muted-label {
+  color: #334155;
+}
+
+body[data-theme='light'] .advance-select {
+  background: rgba(15, 23, 42, 0.05);
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+body[data-theme='light'] .advance-select.has-selection {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(22, 163, 74, 0.65);
+}
+
 /* Formatting for Final Result text */
 .final-result {
   margin: 0.5rem 0 0;

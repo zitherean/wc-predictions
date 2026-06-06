@@ -391,7 +391,7 @@ input:focus {
   align-items: flex-start;
   gap: 1rem;
   position: sticky;
-  top: 60px;
+  top: 80px;
   z-index: 9;
 }
 

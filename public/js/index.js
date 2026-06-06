@@ -78,8 +78,8 @@ function applyTheme(theme) {
   window.localStorage.setItem('theme', theme);
   const themeToggle = document.querySelector('#theme-toggle');
   if (themeToggle) {
-    themeToggle.textContent = theme === 'light' ? '☀ Light' : '🌙 Dark';
-    themeToggle.setAttribute('aria-pressed', String(theme === 'light'));
+    themeToggle.textContent = theme === 'light' ? '🌙 Dark' : '☀️ Light';
+    themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
     themeToggle.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
   }
 }

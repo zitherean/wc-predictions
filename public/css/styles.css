@@ -724,6 +724,10 @@ body.show-archived .card.archived.match-card {
     justify-content: flex-start;
   }
 
+  .page-heading {
+    top: 120px;
+  }
+
   .header-actions {
     margin-left: auto;
   }

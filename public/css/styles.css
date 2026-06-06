@@ -519,6 +519,19 @@ input:focus {
   font-weight: 700;
 }
 
+/* Remove number input arrows in Chrome, Edge, Safari */
+.match-score input[type='number']::-webkit-outer-spin-button,
+.match-score input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove number input arrows in Firefox */
+.match-score input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
 /* Archived matches: hidden by default, toggled with body.show-archived */
 .card.archived {
   display: none;

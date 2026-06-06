@@ -543,7 +543,7 @@ input:focus {
 
 .muted-label {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 1.0rem;
   font-weight: 700;
 }
 

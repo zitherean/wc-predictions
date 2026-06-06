@@ -44,14 +44,23 @@
       <div>
         <h2>Match Predictions</h2>
         <p>Submit your predicted scores before kickoff and save.</p>
-        <button id="save-predictions" class="button button-primary">Save</button>
+
+        <div class="matches-toolbar">
+          <button id="save-predictions" class="button button-primary">Save</button>
+
+
+        </div>
       </div>
     </section>
 
-    <!-- Archive toggle: hidden by default; shows matches that already kicked off -->
-    <div class="page-actions">
-      <button id="toggle-archived" class="button button-secondary" aria-pressed="false">Show match archive</button>
-    </div>
+    <button
+      id="toggle-archived"
+      class="archive-toggle"
+      aria-pressed="false"
+    >
+      Show match archive
+    </button>
+
     <section id="matches-list" class="grid-list">
       <div class="card empty-state">
         <p>Loading matches...</p>

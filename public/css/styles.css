@@ -532,6 +532,21 @@ input:focus {
   -moz-appearance: textfield;
 }
 
+/* Formatting for Final Result text */
+.final-result {
+  margin: 0.5rem 0 0;
+  font-weight: 700;
+}
+
+.advances-result {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+body[data-theme='light'] .advances-result {
+  color: #334155;
+}
+
 /* Archived matches: hidden by default, toggled with body.show-archived */
 .card.archived {
   display: none;

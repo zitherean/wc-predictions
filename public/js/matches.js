@@ -434,7 +434,7 @@ function renderMatches(matches, predictions) {
   }
 
   matchesList.innerHTML = '';
-  let upcomingStageRendered = false;
+  const renderedStages = new Set();
 
   matches.forEach((match) => {
     const card = document.createElement('article');
@@ -451,7 +451,8 @@ function renderMatches(matches, predictions) {
     const knockout = isKnockoutMatch(match.stage);
     const predictionIsDraw = isPredictedDraw(prediction);
     const isUpcomingMatch = canEditMatch(match);
-    const shouldRenderStageHeading = match.stage && isUpcomingMatch && !upcomingStageRendered;
+    const stageKey = String(match.stage ?? '').toLowerCase().replace(/[_\s-]+/g, ' ').trim();
+    const shouldRenderStageHeading = match.stage && !renderedStages.has(stageKey);
     const homeTeamName = getDisplayTeamName(match.home_team);
     const awayTeamName = getDisplayTeamName(match.away_team);
     const advancingTeamName = match.winner_side === 'home'
@@ -469,7 +470,7 @@ function renderMatches(matches, predictions) {
       stageHeading.className = 'match-stage-title';
       stageHeading.textContent = getDisplayStage(match.stage);
       matchesList.appendChild(stageHeading);
-      upcomingStageRendered = true;
+      renderedStages.add(stageKey);
     }
 
     const selectedWinnerSide = prediction.predicted_winner_side || '';

@@ -23,9 +23,21 @@ async function loadLeaderboard() {
     return;
   }
 
+  // remove any profiles that are named 'admin' (case-insensitive)
+  const filtered = data.filter((row) => {
+    const dn = String(row.display_name ?? '').trim().toLowerCase();
+    const uid = String(row.unique_id ?? '').trim().toLowerCase();
+    return dn !== 'admin' && uid !== 'admin';
+  });
+
+  if (!filtered || filtered.length === 0) {
+    renderFallback('No leaderboard data found yet.');
+    return;
+  }
+
   leaderboardBody.innerHTML = '';
 
-  data.forEach((row, index) => {
+  filtered.forEach((row, index) => {
     const tr = document.createElement('tr');
 
     // Rank

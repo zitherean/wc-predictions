@@ -29,6 +29,8 @@ const matchI18n = {
     stageSemiFinal: 'Semi-final',
     stageThirdPlace: 'Third place',
     stageFinal: 'Final',
+    archivedMatchesHeading: 'Archived matches',
+    upcomingMatchesHeading: 'Upcoming matches',
   },
   de: {
     locale: 'de-DE',
@@ -50,6 +52,8 @@ const matchI18n = {
     stageSemiFinal: 'Halbfinale',
     stageThirdPlace: 'Spiel um Platz 3',
     stageFinal: 'Finale',
+    archivedMatchesHeading: 'Archivierte Spiele',
+    upcomingMatchesHeading: 'Bevorstehende Spiele',
   },
   es: {
     locale: 'es-ES',
@@ -71,6 +75,8 @@ const matchI18n = {
     stageSemiFinal: 'Semifinal',
     stageThirdPlace: 'Tercer puesto',
     stageFinal: 'Final',
+    archivedMatchesHeading: 'Partidos archivados',
+    upcomingMatchesHeading: 'Próximos partidos',
   },
 };
 
@@ -381,59 +387,17 @@ function getDisplayStatus(match) {
   return translations.statusLocked;
 }
 
-function isPredictedDraw(prediction) {
-  const homeScore = prediction.predicted_home_score;
-  const awayScore = prediction.predicted_away_score;
-
-  if (homeScore === null || homeScore === undefined || homeScore === '') return false;
-  if (awayScore === null || awayScore === undefined || awayScore === '') return false;
-
-  return Number(homeScore) === Number(awayScore);
+function createMatchSection(title, isArchived = false) {
+  const section = document.createElement('div');
+  section.className = `match-section${isArchived ? ' archived-section' : ''}`;
+  const heading = document.createElement('h2');
+  heading.className = 'match-section-title';
+  heading.textContent = title;
+  section.appendChild(heading);
+  return section;
 }
 
-function formatFinalResult(match) {
-  const hasScore =
-    match.home_score !== null &&
-    match.home_score !== undefined &&
-    match.away_score !== null &&
-    match.away_score !== undefined;
-
-  if (!hasScore) return '';
-
-  const isDraw = match.home_score === match.away_score;
-  const isKnockout = isKnockoutMatch(match.stage);
-
-  let advancesText = '';
-
-  if (isKnockout && isDraw && match.winner_side !== 'draw') {
-    const winnerName =
-      match.winner_side === 'home'
-        ? match.home_team
-        : match.winner_side === 'away'
-          ? match.away_team
-          : null;
-
-    if (winnerName) {
-      advancesText = ` <span class="advances-result">(${winnerName} wins)</span>`;
-    }
-  }
-
-  return `
-    <p class="final-result">
-      Final result: ${match.home_score}-${match.away_score}${advancesText}
-    </p>
-  `;
-}
-
-function renderMatches(matches, predictions) {
-  if (!matchesList) return;
-
-  if (!matches || matches.length === 0) {
-    renderEmpty(getMatchTranslations().noMatches);
-    return;
-  }
-
-  matchesList.innerHTML = '';
+function renderMatchCards(container, matches, predictions) {
   const renderedStages = new Set();
 
   matches.forEach((match) => {
@@ -469,7 +433,7 @@ function renderMatches(matches, predictions) {
       const stageHeading = document.createElement('h3');
       stageHeading.className = 'match-stage-title';
       stageHeading.textContent = getDisplayStage(match.stage);
-      matchesList.appendChild(stageHeading);
+      container.appendChild(stageHeading);
       renderedStages.add(stageKey);
     }
 
@@ -548,8 +512,89 @@ function renderMatches(matches, predictions) {
       ${formatFinalResult(match)}
     `;
 
-    matchesList.appendChild(card);
+    container.appendChild(card);
   });
+}
+
+function renderMatches(matches, predictions) {
+  if (!matchesList) return;
+
+  if (!matches || matches.length === 0) {
+    renderEmpty(getMatchTranslations().noMatches);
+    return;
+  }
+
+  const translations = getMatchTranslations();
+  const now = Date.now();
+  const archivedMatches = [];
+  const upcomingMatches = [];
+
+  matches.forEach((match) => {
+    const kickoff = match.kickoff_time ? Date.parse(match.kickoff_time) : NaN;
+    if (!Number.isNaN(kickoff) && kickoff < now) {
+      archivedMatches.push(match);
+    } else {
+      upcomingMatches.push(match);
+    }
+  });
+
+  matchesList.innerHTML = '';
+
+  if (archivedMatches.length > 0) {
+    const archivedSection = createMatchSection(translations.archivedMatchesHeading, true);
+    renderMatchCards(archivedSection, archivedMatches, predictions);
+    matchesList.appendChild(archivedSection);
+  }
+
+  if (upcomingMatches.length > 0) {
+    const upcomingSection = createMatchSection(translations.upcomingMatchesHeading);
+    renderMatchCards(upcomingSection, upcomingMatches, predictions);
+    matchesList.appendChild(upcomingSection);
+  }
+}
+
+function isPredictedDraw(prediction) {
+  const homeScore = prediction.predicted_home_score;
+  const awayScore = prediction.predicted_away_score;
+
+  if (homeScore === null || homeScore === undefined || homeScore === '') return false;
+  if (awayScore === null || awayScore === undefined || awayScore === '') return false;
+
+  return Number(homeScore) === Number(awayScore);
+}
+
+function formatFinalResult(match) {
+  const hasScore =
+    match.home_score !== null &&
+    match.home_score !== undefined &&
+    match.away_score !== null &&
+    match.away_score !== undefined;
+
+  if (!hasScore) return '';
+
+  const isDraw = match.home_score === match.away_score;
+  const isKnockout = isKnockoutMatch(match.stage);
+
+  let advancesText = '';
+
+  if (isKnockout && isDraw && match.winner_side !== 'draw') {
+    const winnerName =
+      match.winner_side === 'home'
+        ? match.home_team
+        : match.winner_side === 'away'
+          ? match.away_team
+          : null;
+
+    if (winnerName) {
+      advancesText = ` <span class="advances-result">(${winnerName} wins)</span>`;
+    }
+  }
+
+  return `
+    <p class="final-result">
+      Final result: ${match.home_score}-${match.away_score}${advancesText}
+    </p>
+  `;
 }
 
 function captureDraftPredictions() {

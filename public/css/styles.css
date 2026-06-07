@@ -411,6 +411,26 @@ input:focus {
   gap: 1.25rem;
 }
 
+.match-section {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.match-section-title {
+  margin: 0;
+  padding: 0.4rem 0 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.archived-section {
+  display: none;
+}
+
+body.show-archived .archived-section {
+  display: grid;
+}
+
 .match-card {
   display: grid;
   grid-template-columns: 1fr;

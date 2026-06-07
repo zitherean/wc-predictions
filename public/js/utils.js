@@ -1,7 +1,7 @@
-export function formatMatchDate(value) {
-  if (!value) return 'TBD';
+export function formatMatchDate(value, locale = 'en-US', fallback = 'TBD') {
+  if (!value) return fallback;
   const date = new Date(value);
-  return date.toLocaleString('en-US', {
+  return date.toLocaleString(locale, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',

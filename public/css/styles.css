@@ -462,6 +462,17 @@ input:focus {
   font-size: 0.95rem;
 }
 
+.match-result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.75rem;
+  align-items: center;
+}
+
+.match-result span {
+  color: var(--muted);
+}
+
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;

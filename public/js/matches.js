@@ -22,6 +22,16 @@ const matchI18n = {
     selectTeam: 'Select team',
     finalResult: 'Final result:',
     advances: 'Advances:',
+    chooseWinner: 'Choose a winner:',
+    winnerWins: '{team} wins',
+    enterBothScores: 'Enter both scores before saving predictions.',
+    scoresWholeNumbers: 'Scores must be whole numbers.',
+    scoresNonNegative: 'Scores cannot be negative.',
+    drawRequiresAdvanceSelection: 'For a draw in the knockout phase, please select who advances.',
+    noPredictionsToSave: 'No predictions to save',
+    predictionsSaved: 'Predictions saved',
+    unableToSavePredictions: 'Unable to save predictions.',
+    saving: 'Saving...',
     stageGroupStage: 'Group stage',
     stageRoundOf32: 'Round of 32',
     stageRoundOf16: 'Round of 16',
@@ -45,6 +55,16 @@ const matchI18n = {
     selectTeam: 'Team auswaehlen',
     finalResult: 'Endergebnis:',
     advances: 'Kommt weiter:',
+    chooseWinner: 'Wähle einen Gewinner:',
+    winnerWins: '{team} gewinnt',
+    enterBothScores: 'Gib beide Ergebnisse ein, bevor du die Vorhersagen speicherst.',
+    scoresWholeNumbers: 'Ergebnisse müssen ganze Zahlen sein.',
+    scoresNonNegative: 'Ergebnisse dürfen nicht negativ sein.',
+    drawRequiresAdvanceSelection: 'Bei einem Unentschieden in der Knockout-Phase wähle bitte, wer weiterkommt.',
+    noPredictionsToSave: 'Keine Vorhersagen zum Speichern',
+    predictionsSaved: 'Vorhersagen gespeichert',
+    unableToSavePredictions: 'Vorhersagen konnten nicht gespeichert werden.',
+    saving: 'Speichern...',
     stageGroupStage: 'Gruppenphase',
     stageRoundOf32: 'Runde der letzten 32',
     stageRoundOf16: 'Achtelfinale',
@@ -68,6 +88,16 @@ const matchI18n = {
     selectTeam: 'Seleccionar equipo',
     finalResult: 'Resultado final:',
     advances: 'Avanza:',
+    chooseWinner: 'Elige un ganador:',
+    winnerWins: '{team} gana',
+    enterBothScores: 'Introduce ambos resultados antes de guardar las predicciones.',
+    scoresWholeNumbers: 'Los resultados deben ser números enteros.',
+    scoresNonNegative: 'Los resultados no pueden ser negativos.',
+    drawRequiresAdvanceSelection: 'Para un empate en la fase eliminatoria, selecciona quién avanza.',
+    noPredictionsToSave: 'No hay predicciones para guardar',
+    predictionsSaved: 'Predicciones guardadas',
+    unableToSavePredictions: 'No se pudieron guardar las predicciones.',
+    saving: 'Guardando...',
     stageGroupStage: 'Fase de grupos',
     stageRoundOf32: 'Dieciseisavos de final',
     stageRoundOf16: 'Octavos de final',
@@ -489,7 +519,7 @@ function renderMatchCards(container, matches, predictions) {
           ? `
             <div class="advance-selector" ${predictionIsDraw ? '' : 'hidden'}>
               <label>
-                <span class="muted-label">Choose a winner:</span>
+                <span class="muted-label">${escapeHtml(translations.chooseWinner)}</span>
                 <select
                   class="advance-select ${selectedWinnerSide ? 'has-selection' : ''}"
                   data-match-id="${match.id}"
@@ -564,6 +594,7 @@ function isPredictedDraw(prediction) {
 }
 
 function formatFinalResult(match) {
+  const translations = getMatchTranslations();
   const hasScore =
     match.home_score !== null &&
     match.home_score !== undefined &&
@@ -586,13 +617,13 @@ function formatFinalResult(match) {
           : null;
 
     if (winnerName) {
-      advancesText = ` <span class="advances-result">(${winnerName} wins)</span>`;
+      advancesText = ` <span class="advances-result">(${translations.winnerWins.replace('{team}', escapeHtml(winnerName))})</span>`;
     }
   }
 
   return `
     <p class="final-result">
-      Final result: ${match.home_score}-${match.away_score}${advancesText}
+      ${escapeHtml(translations.finalResult)} ${match.home_score}-${match.away_score}${advancesText}
     </p>
   `;
 }
@@ -618,6 +649,7 @@ function captureDraftPredictions() {
 async function saveAllPredictions() {
   if (!savePredictionsButton) return;
 
+  const translations = getMatchTranslations();
   const cards = document.querySelectorAll('.match-card');
   const predictionsToSave = [];
 
@@ -641,7 +673,7 @@ async function saveAllPredictions() {
     }
 
     if (home === '' || away === '') {
-      alert('Enter both scores before saving predictions.');
+      alert(translations.enterBothScores);
       return;
     }
 
@@ -649,12 +681,12 @@ async function saveAllPredictions() {
     const awayScore = Number(away);
 
     if (!Number.isInteger(homeScore) || !Number.isInteger(awayScore)) {
-      alert('Scores must be whole numbers.');
+      alert(translations.scoresWholeNumbers);
       return;
     }
 
     if (homeScore < 0 || awayScore < 0) {
-      alert('Scores cannot be negative.');
+      alert(translations.scoresNonNegative);
       return;
     }
 
@@ -668,7 +700,7 @@ async function saveAllPredictions() {
       }
 
       if (!predictedWinnerSide) {
-        alert('For a draw in the knockout phase, please select who advances.');
+        alert(translations.drawRequiresAdvanceSelection);
         return;
       }
     }
@@ -682,12 +714,12 @@ async function saveAllPredictions() {
   }
 
   if (predictionsToSave.length === 0) {
-    showTransientMessageNear(savePredictionsButton, 'No predictions to save', 2200);
+    showTransientMessageNear(savePredictionsButton, translations.noPredictionsToSave, 2200);
     return;
   }
 
   const originalText = savePredictionsButton.textContent;
-  savePredictionsButton.textContent = 'Saving...';
+  savePredictionsButton.textContent = translations.saving;
   savePredictionsButton.disabled = true;
 
   try {
@@ -701,11 +733,11 @@ async function saveAllPredictions() {
     }
 
     // show a small transient confirmation next to the Save button
-    showTransientMessageNear(savePredictionsButton, 'Predictions saved', 2200);
+    showTransientMessageNear(savePredictionsButton, translations.predictionsSaved, 2200);
   } catch (error) {
     showTransientMessageNear(
       savePredictionsButton,
-      error.message || 'Unable to save predictions.',
+      error.message || translations.unableToSavePredictions,
       2200
     );
   } finally {

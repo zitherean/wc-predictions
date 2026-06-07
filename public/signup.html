@@ -43,10 +43,10 @@
     <section class="card auth-card" style="max-width:520px; margin:0 auto 2.4rem;">
       <h2 data-i18n="auth.createAccount">Create account</h2>
       <form id="sign-up-form">
-        <p class="form-warning"><b>Warning!</b> Do not use any real username or password that you use elsewhere. Choose unique credentials to protect your privacy and security.</p><br>
-        <label><span data-i18n="auth.username">Username</span><input type="text" name="username" required placeholder="Choose a username" autocomplete="username" /></label>
-        <label><span data-i18n="auth.password">Password</span><input type="password" name="password" required placeholder="Create password" autocomplete="new-password" /></label>
-        <label><span>Display name</span><input type="text" name="displayName" required placeholder="Enter a display name" autocomplete="name" /></label>
+        <p class="form-warning" data-i18n="auth.signupWarning"></p><br>
+        <label><span data-i18n="auth.username">Username</span><input type="text" name="username" required placeholder="Choose a username" data-i18n-placeholder="auth.usernamePlaceholder" autocomplete="username" /></label>
+        <label><span data-i18n="auth.password">Password</span><input type="password" name="password" required placeholder="Create password" data-i18n-placeholder="auth.passwordPlaceholder" autocomplete="new-password" /></label>
+        <label><span data-i18n="auth.displayName">Display name</span><input type="text" name="displayName" required placeholder="Enter a display name" data-i18n-placeholder="auth.displayNamePlaceholder" autocomplete="name" /></label>
         <div style="display:flex; gap:0.75rem; align-items:center; margin-top:0.6rem;">
           <button class="button button-primary" type="submit" data-i18n="auth.createAccountButton">Create account</button>
           <a class="button button-secondary" href="index.html" data-i18n="auth.backToSignIn">Back to sign in</a>

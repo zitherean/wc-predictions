@@ -1,6 +1,35 @@
 const matchesListSelector = '#matches-list';
 const toggleButtonId = 'toggle-archived';
 
+const archiveToggleI18n = {
+  en: {
+    showArchiveButton: 'Show match archive',
+    hideArchiveButton: 'Hide match archive',
+    archiveEmptyMessage: 'Finished matches will appear here.',
+  },
+  de: {
+    showArchiveButton: 'Archivierte Spiele anzeigen',
+    hideArchiveButton: 'Archiv verbergen',
+    archiveEmptyMessage: 'Beendete Spiele werden hier angezeigt.',
+  },
+  es: {
+    showArchiveButton: 'Mostrar archivo de partidos',
+    hideArchiveButton: 'Ocultar archivo de partidos',
+    archiveEmptyMessage: 'Los partidos finalizados aparecerán aquí.',
+  },
+};
+
+function getCurrentLanguage() {
+  return document.querySelector('#language-select')?.value
+    || window.localStorage.getItem('language')
+    || document.documentElement.lang
+    || 'en';
+}
+
+function getArchiveToggleTranslations() {
+  return archiveToggleI18n[getCurrentLanguage()] || archiveToggleI18n.en;
+}
+
 function parseIsoFromElement(el) {
   if (!el) return null;
 
@@ -30,12 +59,13 @@ function showArchiveEmptyMessage() {
 
   removeArchiveEmptyMessage();
 
+  const translations = getArchiveToggleTranslations();
   const message = document.createElement('div');
   message.className = 'card empty-state archive-empty-message';
 
-  message.innerHTML = `
-    <p>Finished matches will appear here.</p>
-  `;
+  const paragraph = document.createElement('p');
+  paragraph.textContent = translations.archiveEmptyMessage;
+  message.appendChild(paragraph);
 
   // Put it at the top of the match list so it is immediately visible
   list.prepend(message);
@@ -76,8 +106,9 @@ function setupToggle() {
 
   function updateButtonText() {
     const showing = document.body.classList.contains('show-archived');
+    const translations = getArchiveToggleTranslations();
 
-    btn.textContent = showing ? 'Hide match archive' : 'Show match archive';
+    btn.textContent = showing ? translations.hideArchiveButton : translations.showArchiveButton;
     btn.setAttribute('aria-pressed', String(showing));
   }
 

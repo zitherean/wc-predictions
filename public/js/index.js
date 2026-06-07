@@ -30,6 +30,12 @@ const i18n = {
     'leaderboard.points': 'Points',
     'auth.username': 'Username',
     'auth.password': 'Password',
+    'auth.displayName': 'Display name',
+    'auth.usernamePlaceholder': 'Choose a username',
+    'auth.passwordPlaceholder': 'Create password',
+    'auth.passwordSignInPlaceholder': 'Enter password',
+    'auth.displayNamePlaceholder': 'Enter a display name',
+    'auth.signupWarning': 'Warning! Do not use any real username or password that you use elsewhere. Choose unique credentials to protect your privacy and security.',
     'auth.signInButton': 'Sign in',
     'auth.signUpLink': 'Sign up',
     'auth.createAccount': 'Create account',
@@ -85,6 +91,12 @@ const i18n = {
     'leaderboard.points': 'Punkte',
     'auth.username': 'Benutzername',
     'auth.password': 'Passwort',
+    'auth.displayName': 'Anzeigename',
+    'auth.usernamePlaceholder': 'Wähle einen Benutzernamen',
+    'auth.passwordPlaceholder': 'Erstelle ein Passwort',
+    'auth.passwordSignInPlaceholder': 'Passwort eingeben',
+    'auth.displayNamePlaceholder': 'Gib einen Anzeigenamen ein',
+    'auth.signupWarning': 'Warnung! Verwende keinen echten Benutzernamen oder Passwort, das du anderswo nutzt. Wähle einzigartige Zugangsdaten, um deine Privatsphäre und Sicherheit zu schützen.',
     'auth.signInButton': 'Anmelden',
     'auth.signUpLink': 'Registrieren',
     'auth.createAccount': 'Konto erstellen',
@@ -140,6 +152,12 @@ const i18n = {
     'leaderboard.points': 'Puntos',
     'auth.username': 'Usuario',
     'auth.password': 'Contraseña',
+    'auth.displayName': 'Nombre a mostrar',
+    'auth.usernamePlaceholder': 'Elige un nombre de usuario',
+    'auth.passwordPlaceholder': 'Crea una contraseña',
+    'auth.passwordSignInPlaceholder': 'Introduce la contraseña',
+    'auth.displayNamePlaceholder': 'Introduce un nombre para mostrar',
+    'auth.signupWarning': '¡Advertencia! No uses ningún nombre de usuario o contraseña real que uses en otros sitios. Elige credenciales únicas para proteger tu privacidad y seguridad.',
     'auth.signInButton': 'Iniciar sesión',
     'auth.signUpLink': 'Registrarse',
     'auth.createAccount': 'Crear cuenta',
@@ -209,6 +227,12 @@ function translatePage(language) {
     const key = element.dataset.i18n;
     if (translations[key]) {
       element.textContent = translations[key];
+    }
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((element) => {
+    const key = element.dataset.i18nPlaceholder;
+    if (translations[key]) {
+      element.placeholder = translations[key];
     }
   });
   document.querySelectorAll('[data-i18n-title]').forEach((element) => {

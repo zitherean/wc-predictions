@@ -1,6 +1,10 @@
 function getBaseUrl(request) {
   const host = request.headers.host;
 
+  if (process.env.SITE_URL) {
+    return process.env.SITE_URL;
+  }
+
   if (host?.includes('localhost')) {
     return `http://${host}`;
   }
@@ -33,6 +37,7 @@ async function callEndpoint(baseUrl, path) {
   }
 
   return {
+    url: `${baseUrl}${path}`,
     path,
     status: response.status,
     ok: response.ok,
@@ -41,6 +46,8 @@ async function callEndpoint(baseUrl, path) {
 }
 
 export default async function handler(request, response) {
+  console.log('Cron update started');
+
   if (request.method !== 'GET') {
     return response.status(405).json({
       error: 'Method not allowed'
@@ -61,7 +68,11 @@ export default async function handler(request, response) {
 
   const baseUrl = getBaseUrl(request);
 
+  console.log('Cron base URL:', baseUrl);
+
   const syncResult = await callEndpoint(baseUrl, '/api/sync-matches');
+
+  console.log('Sync result:', JSON.stringify(syncResult, null, 2));
 
   if (!syncResult.ok) {
     return response.status(500).json({
@@ -71,6 +82,8 @@ export default async function handler(request, response) {
   }
 
   const pointsResult = await callEndpoint(baseUrl, '/api/calculate-points');
+
+  console.log('Points result:', JSON.stringify(pointsResult, null, 2));
 
   if (!pointsResult.ok) {
     return response.status(500).json({

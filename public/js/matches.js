@@ -568,6 +568,16 @@ function renderMatches(matches, predictions) {
     }
   });
 
+  // Archived matches: most recent first
+  archivedMatches.sort((a, b) => {
+    return Date.parse(b.kickoff_time) - Date.parse(a.kickoff_time);
+  });
+
+  // Upcoming matches: next match first
+  upcomingMatches.sort((a, b) => {
+    return Date.parse(a.kickoff_time) - Date.parse(b.kickoff_time);
+  });
+
   matchesList.innerHTML = '';
 
   if (archivedMatches.length > 0) {

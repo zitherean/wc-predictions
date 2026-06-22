@@ -33,6 +33,9 @@ Thumbs.db
 *.tmp
 *.temp
 
+# Script files
+scripts/
+
 # Optional: local test data
 local-data/
 test-output/

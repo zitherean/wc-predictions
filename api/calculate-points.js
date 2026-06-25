@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
+const PAGE_SIZE = 1000;
+
 function createServerSupabaseClient() {
   return createClient(
     process.env.SUPABASE_URL,
@@ -8,7 +10,10 @@ function createServerSupabaseClient() {
 }
 
 async function requireAdminOrCron(request, supabase) {
-  const authHeader = request.headers.authorization || '';
+  const authHeader =
+    request.headers.authorization ||
+    request.headers.Authorization ||
+    "";
 
   if (
     process.env.CRON_SECRET &&
@@ -16,17 +21,17 @@ async function requireAdminOrCron(request, supabase) {
   ) {
     return {
       ok: true,
-      source: 'cron'
+      source: "cron"
     };
   }
 
-  const token = authHeader.replace('Bearer ', '');
+  const token = authHeader.replace("Bearer ", "");
 
   if (!token) {
     return {
       ok: false,
       status: 401,
-      error: 'Missing authorization token.'
+      error: "Missing authorization token."
     };
   }
 
@@ -39,21 +44,21 @@ async function requireAdminOrCron(request, supabase) {
     return {
       ok: false,
       status: 401,
-      error: 'Invalid or expired session.'
+      error: "Invalid or expired session."
     };
   }
 
   const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('is_admin, display_name')
-    .eq('id', user.id)
+    .from("profiles")
+    .select("is_admin, display_name")
+    .eq("id", user.id)
     .single();
 
   if (profileError) {
     return {
       ok: false,
       status: 500,
-      error: 'Unable to check admin profile.'
+      error: "Unable to check admin profile."
     };
   }
 
@@ -61,13 +66,13 @@ async function requireAdminOrCron(request, supabase) {
     return {
       ok: false,
       status: 403,
-      error: 'Admin access required.'
+      error: "Admin access required."
     };
   }
 
   return {
     ok: true,
-    source: 'admin',
+    source: "admin",
     user,
     profile
   };
@@ -120,6 +125,15 @@ function calculatePredictionPoints(prediction) {
     return 0;
   }
 
+  if (
+    predictedHome === null ||
+    predictedHome === undefined ||
+    predictedAway === null ||
+    predictedAway === undefined
+  ) {
+    return 0;
+  }
+
   const exactScore =
     predictedHome === actualHome && predictedAway === actualAway;
 
@@ -142,7 +156,7 @@ function calculatePredictionPoints(prediction) {
       prediction.predicted_winner_side || predictedResult;
 
     if (
-      actualAdvancingSide !== 'draw' &&
+      actualAdvancingSide !== "draw" &&
       predictedAdvancingSide === actualAdvancingSide
     ) {
       points += 2;
@@ -150,6 +164,49 @@ function calculatePredictionPoints(prediction) {
   }
 
   return points;
+}
+
+async function fetchAllPredictions(supabase) {
+  const allPredictions = [];
+  let from = 0;
+
+  while (true) {
+    const to = from + PAGE_SIZE - 1;
+
+    const { data, error } = await supabase
+      .from("predictions")
+      .select(`
+        id,
+        predicted_home_score,
+        predicted_away_score,
+        predicted_winner_side,
+        points,
+        matches (
+          id,
+          stage,
+          status,
+          home_score,
+          away_score,
+          winner_side
+        )
+      `)
+      .order("id", { ascending: true })
+      .range(from, to);
+
+    if (error) {
+      throw error;
+    }
+
+    allPredictions.push(...(data || []));
+
+    if (!data || data.length < PAGE_SIZE) {
+      break;
+    }
+
+    from += PAGE_SIZE;
+  }
+
+  return allPredictions;
 }
 
 export default async function handler(request, response) {
@@ -175,25 +232,11 @@ export default async function handler(request, response) {
     });
   }
 
-  const { data: predictions, error: fetchError } = await supabase
-    .from("predictions")
-    .select(`
-      id,
-      predicted_home_score,
-      predicted_away_score,
-      predicted_winner_side,
-      points,
-      matches (
-        id,
-        stage,
-        status,
-        home_score,
-        away_score,
-        winner_side
-      )
-  `);
+  let predictions;
 
-  if (fetchError) {
+  try {
+    predictions = await fetchAllPredictions(supabase);
+  } catch (fetchError) {
     return response.status(500).json({
       error: "Failed to fetch predictions.",
       details: fetchError
@@ -207,22 +250,30 @@ export default async function handler(request, response) {
       match &&
       match.status === "finished" &&
       match.home_score !== null &&
-      match.away_score !== null
+      match.home_score !== undefined &&
+      match.away_score !== null &&
+      match.away_score !== undefined
     );
   });
 
-  const updates = finishedPredictions.map((prediction) => {
-    return {
-      id: prediction.id,
-      points: calculatePredictionPoints(prediction)
-    };
-  });
+  const updates = finishedPredictions
+    .map((prediction) => {
+      const oldPoints = prediction.points ?? 0;
+      const newPoints = calculatePredictionPoints(prediction);
+
+      return {
+        id: prediction.id,
+        oldPoints,
+        newPoints
+      };
+    })
+    .filter((update) => update.oldPoints !== update.newPoints);
 
   for (const update of updates) {
     const { error: updateError } = await supabase
       .from("predictions")
       .update({
-        points: update.points,
+        points: update.newPoints,
         updated_at: new Date().toISOString()
       })
       .eq("id", update.id);
@@ -231,6 +282,8 @@ export default async function handler(request, response) {
       return response.status(500).json({
         error: "Failed to update prediction points.",
         predictionId: update.id,
+        oldPoints: update.oldPoints,
+        newPoints: update.newPoints,
         details: updateError
       });
     }
@@ -238,7 +291,9 @@ export default async function handler(request, response) {
 
   return response.status(200).json({
     message: "Points recalculated successfully.",
+    source: adminCheck.source,
     checkedPredictions: predictions.length,
+    finishedPredictions: finishedPredictions.length,
     updatedPredictions: updates.length
   });
 }

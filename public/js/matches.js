@@ -23,7 +23,7 @@ const matchI18n = {
     finalResult: 'Final result:',
     advances: 'Advances:',
     chooseWinner: 'Choose a winner:',
-    winnerWins: '{team} wins',
+    winnerWins: '{team} advances',
     enterBothScores: 'Enter both scores before saving predictions.',
     scoresWholeNumbers: 'Scores must be whole numbers.',
     scoresNonNegative: 'Scores cannot be negative.',

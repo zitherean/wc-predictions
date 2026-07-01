@@ -57,12 +57,62 @@ function mapWinnerSide(apiWinner) {
   }
 }
 
-function extractScore(match) {
-  const fullTime = match.score?.fullTime;
+function getScoreNumber(scorePart, side) {
+  const value = scorePart?.[side];
+  return typeof value === "number" ? value : null;
+}
 
+function extractScore(match) {
+  const score = match.score;
+
+  const fullHome = getScoreNumber(score?.fullTime, "home");
+  const fullAway = getScoreNumber(score?.fullTime, "away");
+
+  const penaltyHome = getScoreNumber(score?.penalties, "home");
+  const penaltyAway = getScoreNumber(score?.penalties, "away");
+
+  const regularHome = getScoreNumber(score?.regularTime, "home");
+  const regularAway = getScoreNumber(score?.regularTime, "away");
+
+  const extraHome = getScoreNumber(score?.extraTime, "home");
+  const extraAway = getScoreNumber(score?.extraTime, "away");
+
+  // If the match went to penalties, do NOT save the penalty-included score.
+  // Example: fullTime 3-4 and penalties 2-3 becomes 1-1.
+  if (score?.duration === "PENALTY_SHOOTOUT") {
+    if (
+      fullHome !== null &&
+      fullAway !== null &&
+      penaltyHome !== null &&
+      penaltyAway !== null
+    ) {
+      return {
+        home_score: fullHome - penaltyHome,
+        away_score: fullAway - penaltyAway
+      };
+    }
+
+    // Fallback: if the API gives the score after extra time separately.
+    if (extraHome !== null && extraAway !== null) {
+      return {
+        home_score: extraHome,
+        away_score: extraAway
+      };
+    }
+
+    // Final fallback: regular time score.
+    if (regularHome !== null && regularAway !== null) {
+      return {
+        home_score: regularHome,
+        away_score: regularAway
+      };
+    }
+  }
+
+  // Normal matches: use fullTime.
   return {
-    home_score: typeof fullTime?.home === "number" ? fullTime.home : null,
-    away_score: typeof fullTime?.away === "number" ? fullTime.away : null
+    home_score: fullHome,
+    away_score: fullAway
   };
 }
 

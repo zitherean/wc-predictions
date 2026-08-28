@@ -1,4 +1,11 @@
-import { supabase } from "./supabase-client.js";
+import {
+  clearCurrentUser,
+  getCurrentUser,
+  getLocalAccounts,
+  loadProfiles,
+  saveLocalAccount,
+  setCurrentUser,
+} from './data.js';
 import { showMessage } from './utils.js';
 
 const statusContainer = document.querySelector('#auth-status');
@@ -30,102 +37,47 @@ function usernameToEmail(username) {
 }
 
 export async function signInWithUsername(username, password) {
-  validateUsername(username);
-  const email = usernameToEmail(username);
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw error;
+  const uniqueId = normalizeUniqueId(validateUsername(username));
+  if (!String(password || '').trim()) throw new Error('Password is required.');
+  const profiles = await loadProfiles();
+  const accounts = getLocalAccounts();
+  const profile = [...accounts, ...profiles].find((item) => item.unique_id === uniqueId);
+  if (!profile) throw new Error('Username not found.');
+  const account = accounts.find((item) => item.unique_id === uniqueId);
+  if (account && account.password !== password) throw new Error('Incorrect password.');
+  setCurrentUser({ id: profile.id, unique_id: profile.unique_id, display_name: profile.display_name, is_admin: profile.is_admin === true });
   return true;
 }
 
 export async function checkDisplayNameAvailable(displayName) {
   const value = validateDisplayName(displayName);
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('id')
-    .ilike('display_name', value)
-    .maybeSingle();
-  if (error) throw error;
-  return !data;
+  const profiles = await loadProfiles();
+  return ![...profiles, ...getLocalAccounts()].some((profile) => profile.display_name.toLowerCase() === value.toLowerCase());
 }
 
 export async function signUpWithUsername(username, password, displayName) {
   const uniqueId = normalizeUniqueId(validateUsername(username));
   const safeDisplayName = validateDisplayName(displayName);
-  const email = usernameToEmail(uniqueId);
-
-  // 1. Check if username already exists
-  const { data: existingUsername, error: usernameCheckError } = await supabase
-    .from('profiles')
-    .select('id')
-    .eq('unique_id', uniqueId)
-    .maybeSingle();
-
-  if (usernameCheckError) {
-    throw usernameCheckError;
-  }
-
-  if (existingUsername) {
+  const profiles = await loadProfiles();
+  const allProfiles = [...profiles, ...getLocalAccounts()];
+  if (allProfiles.some((profile) => profile.unique_id === uniqueId)) {
     throw new Error('This username is already taken. Please choose another one.');
   }
-
-  // 2. Check if display name already exists, case-insensitive
-  const { data: existingDisplayName, error: displayNameCheckError } = await supabase
-    .from('profiles')
-    .select('id')
-    .ilike('display_name', safeDisplayName)
-    .maybeSingle();
-
-  if (displayNameCheckError) {
-    throw displayNameCheckError;
-  }
-
-  if (existingDisplayName) {
+  if (allProfiles.some((profile) => profile.display_name.toLowerCase() === safeDisplayName.toLowerCase())) {
     throw new Error('This display name is already taken. Please choose another one.');
   }
-
-  // 3. Only now create the Supabase Auth user
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password
-  });
-
-  if (error) {
-    throw error;
-  }
-
-  const userId = data.user?.id;
-
-  if (!userId) {
-    throw new Error('Account was created, but no user ID was returned.');
-  }
-
-  // 4. Create the profile row
-  const { error: profileError } = await supabase
-    .from('profiles')
-    .insert({
-      id: userId,
-      unique_id: uniqueId,
-      display_name: safeDisplayName
-    });
-
-  if (profileError) {
-    if (profileError.code === '23505') {
-      throw new Error('Account could not be completed because the username or display name was already taken. Please contact the admin or try a different username.');
-    }
-
-    throw new Error(`Account was created, but profile setup failed: ${profileError.message}`);
-  }
-
+  if (String(password || '').length < 1) throw new Error('Password is required.');
+  const account = { id: crypto.randomUUID(), unique_id: uniqueId, display_name: safeDisplayName, password, is_admin: false };
+  saveLocalAccount(account);
   return true;
 }
 
 export async function signOut() {
-  await supabase.auth.signOut();
+  clearCurrentUser();
 }
 
 export async function getUser() {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.user || null;
+  return getCurrentUser();
 }
 
 export async function initAuthForms() {
@@ -178,37 +130,12 @@ export async function renderUserStatus() {
 
   const user = await getUser();
   if (user) {
-    let display = user.email || user.id;
-    try {
-      const { data } = await supabase.from('profiles').select('display_name').eq('id', user.id).single();
-      if (data?.display_name) display = data.display_name;
-    } catch (err) {
-      // ignore
-    }
-    showMessage(statusContainer, `Signed in as ${display}`);
+    showMessage(statusContainer, `Signed in as ${user.display_name || user.unique_id}`);
   } else {
     showMessage(statusContainer, 'Not signed in. Use the form above or go to Matches once signed in.');
   }
 }
 
 export async function isCurrentUserAdmin() {
-  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-
-  if (sessionError || !sessionData.session?.user) {
-    return false;
-  }
-
-  const userId = sessionData.session.user.id;
-
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('is_admin')
-    .eq('id', userId)
-    .single();
-
-  if (profileError || !profile) {
-    return false;
-  }
-
-  return profile.is_admin === true;
+  return getCurrentUser()?.is_admin === true;
 }

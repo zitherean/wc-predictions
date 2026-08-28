@@ -1,4 +1,5 @@
-import { supabase } from './supabase-client.js';
+import { getCurrentUser } from './data.js';
+import { signOut } from './auth.js';
 import { makeLogEntry } from './utils.js';
 
 const syncButton = document.querySelector('#sync-matches');
@@ -19,34 +20,10 @@ function setAccessMessage(message) {
   accessMessage.textContent = message;
 }
 
-async function getCurrentSession() {
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error) {
-    throw error;
-  }
-
-  return data.session;
-}
-
-async function getCurrentProfile(userId) {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('id, display_name, is_admin')
-    .eq('id', userId)
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
 async function checkAdminAccess() {
-  const session = await getCurrentSession();
+  const user = getCurrentUser();
 
-  if (!session?.user) {
+  if (!user) {
     setAccessMessage('You must sign in first. Redirecting...');
     appendLog('No active session. Redirecting to sign in.');
 
@@ -55,17 +32,15 @@ async function checkAdminAccess() {
     return false;
   }
 
-  const profile = await getCurrentProfile(session.user.id);
-
-  if (!profile?.is_admin) {
+  if (!user.is_admin) {
     setAccessMessage('Access denied. This page is only available to admins.');
-    appendLog(`Access denied for ${profile?.display_name || session.user.id}.`);
+    appendLog(`Access denied for ${user.display_name || user.id}.`);
 
     window.location.replace('index.html');
     return false;
   }
 
-  setAccessMessage(`Signed in as admin: ${profile.display_name}`);
+  setAccessMessage(`Signed in as admin: ${user.display_name}`);
   appendLog('Admin access confirmed.');
 
 
@@ -82,27 +57,7 @@ async function callAdminEndpoint(path, button) {
   }
 
   try {
-    const session = await getCurrentSession();
-    const token = session?.access_token;
-
-    if (!token) {
-      appendLog('Sign in first to use admin actions.');
-      window.location.href = 'index.html';
-      return;
-    }
-
-    appendLog(`Calling ${path}...`);
-
-    const response = await fetch(path, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-
-    const body = await response.text();
-    appendLog(`Response ${response.status}: ${body}`);
+    appendLog(`${path} is unavailable in static mode. Replace the JSON snapshot files to publish updated data.`);
   } catch (error) {
     appendLog(`Error: ${error.message}`);
   } finally {
@@ -124,19 +79,19 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     if (syncButton) {
       syncButton.addEventListener('click', () => {
-        callAdminEndpoint('/api/sync-matches', syncButton);
+        callAdminEndpoint('Match sync', syncButton);
       });
     }
 
     if (calculateButton) {
       calculateButton.addEventListener('click', () => {
-        callAdminEndpoint('/api/calculate-points', calculateButton);
+        callAdminEndpoint('Point calculation', calculateButton);
       });
     }
 
     if (signOutButton) {
       signOutButton.addEventListener('click', async () => {
-        await supabase.auth.signOut();
+        await signOut();
         window.location.href = 'index.html';
       });
     }

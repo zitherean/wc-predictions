@@ -1,62 +1,42 @@
-import { supabase } from './supabase-client.js';
+import {
+  getCurrentUser,
+  getSavedPredictions,
+  loadSnapshotPredictions,
+  saveUserPrediction,
+} from './data.js';
+
+const PLAYER_06_ID = 'b2e80ec5-ec27-45cf-a01d-6dac807e3d93';
 
 export async function getCurrentUserId() {
-  const { data } = await supabase.auth.getSession();
-  return data.session?.user?.id || null;
+  return getCurrentUser()?.id || PLAYER_06_ID;
 }
 
 export async function fetchPredictions(matchIds) {
   const userId = await getCurrentUserId();
 
-  if (!userId || !matchIds || matchIds.length === 0) {
+  if (!matchIds || matchIds.length === 0) {
     return {};
   }
 
-  const { data, error } = await supabase
-    .from('predictions')
-    .select('match_id, predicted_home_score, predicted_away_score, predicted_winner_side')
-    .eq('user_id', userId)
-    .in('match_id', matchIds);
+  const saved = getSavedPredictions(userId);
+  const snapshot = await loadSnapshotPredictions();
+  const player06Predictions = snapshot
+    .filter((prediction) => prediction.user_id === PLAYER_06_ID)
+    .reduce((map, prediction) => {
+      map[prediction.match_id] = prediction;
+      return map;
+    }, {});
 
-  if (error) {
-    throw error;
-  }
-
-  return (data || []).reduce((map, prediction) => {
-    map[prediction.match_id] = prediction;
-    return map;
-  }, {});
+  return Object.fromEntries(
+    matchIds
+      .filter((id) => saved[id] || player06Predictions[id])
+      .map((id) => [id, saved[id] || player06Predictions[id]])
+  );
 }
 
 export async function savePrediction(matchId, homeScore, awayScore, predictedWinnerSide = null) {
-  const {
-    data: { user },
-    error: userError
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    throw new Error('You must be logged in to save a prediction.');
-  }
-
-  const { data, error } = await supabase
-    .from('predictions')
-    .upsert(
-      {
-        user_id: user.id,
-        match_id: matchId,
-        predicted_home_score: homeScore,
-        predicted_away_score: awayScore,
-        predicted_winner_side: predictedWinnerSide
-      },
-      {
-        onConflict: 'user_id,match_id'
-      }
-    )
-    .select();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  const userId = getCurrentUser()?.id || PLAYER_06_ID;
+  const prediction = { user_id: userId, match_id: matchId, predicted_home_score: homeScore, predicted_away_score: awayScore, predicted_winner_side: predictedWinnerSide };
+  saveUserPrediction(userId, prediction);
+  return [prediction];
 }

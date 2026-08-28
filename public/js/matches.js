@@ -1,4 +1,4 @@
-import { supabase } from './supabase-client.js';
+import { loadMatches } from './data.js';
 import { formatMatchDate, showMessage } from './utils.js';
 import { fetchPredictions, savePrediction } from './predictions.js';
 
@@ -369,27 +369,13 @@ function getPredictedWinnerSide(homeScore, awayScore) {
 }
 
 async function fetchMatches() {
-  const { data, error } = await supabase
-    .from('matches')
-    .select(`
-      id,
-      home_team,
-      away_team,
-      kickoff_time,
-      stage,
-      status,
-      home_score,
-      away_score,
-      winner_side
-    `)
-    .order('kickoff_time', { ascending: true });
-
-  if (error) {
+  try {
+    const data = await loadMatches();
+    return [...data].sort((a, b) => new Date(a.kickoff_time) - new Date(b.kickoff_time));
+  } catch (error) {
     renderEmpty(error.message || 'Unable to load matches.');
     return [];
   }
-
-  return data || [];
 }
 
 function renderEmpty(text) {
@@ -403,10 +389,7 @@ function renderEmpty(text) {
 }
 
 function canEditMatch(match) {
-  if (!match.kickoff_time) return true;
-
-  const kickoff = new Date(match.kickoff_time).getTime();
-  return Date.now() < kickoff;
+  return true;
 }
 
 function getDisplayStatus(match) {
@@ -767,7 +750,7 @@ async function initMatchesPage() {
 
   if (signOutButton) {
     signOutButton.addEventListener('click', async () => {
-      await supabase.auth.signOut();
+      window.localStorage.removeItem('wc-predictions-session');
       window.location.href = 'index.html';
     });
   }

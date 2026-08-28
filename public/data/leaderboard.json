@@ -1,0 +1,177 @@
+[
+  {
+    "id": "1445b888-8491-4be3-a7ba-48ff935fd7de",
+    "display_name": "Player 20",
+    "unique_id": "player_20",
+    "total_points": 49,
+    "predictions_count": 20
+  },
+  {
+    "id": "190fb72f-14b3-4776-9bfb-e5a69bde593c",
+    "display_name": "Player 16",
+    "unique_id": "player_16",
+    "total_points": 0,
+    "predictions_count": 0
+  },
+  {
+    "id": "25b07afe-f810-4843-b758-80e8d2457844",
+    "display_name": "Player 12",
+    "unique_id": "player_12",
+    "total_points": 209,
+    "predictions_count": 104
+  },
+  {
+    "id": "2779d13e-6758-4c1a-a144-32b31bfa75b6",
+    "display_name": "Player 08",
+    "unique_id": "player_08",
+    "total_points": 0,
+    "predictions_count": 0
+  },
+  {
+    "id": "2e8add9f-df90-47b8-b6ab-181f1ac3c22f",
+    "display_name": "Player 15",
+    "unique_id": "player_15",
+    "total_points": 184,
+    "predictions_count": 86
+  },
+  {
+    "id": "3304d67b-05c9-48a0-a6e6-1c6c9b03854e",
+    "display_name": "Player 13",
+    "unique_id": "player_13",
+    "total_points": 237,
+    "predictions_count": 96
+  },
+  {
+    "id": "3e6efc4d-9ec7-48a2-ac39-8aad7004be31",
+    "display_name": "Admin",
+    "unique_id": "admin",
+    "total_points": 0,
+    "predictions_count": 0
+  },
+  {
+    "id": "46de5ead-9e69-43c8-a954-de7bf2ea5038",
+    "display_name": "Player 14",
+    "unique_id": "player_14",
+    "total_points": 219,
+    "predictions_count": 103
+  },
+  {
+    "id": "4fc4e2a5-02c1-4060-b8ad-658caa5abc3b",
+    "display_name": "Player 22",
+    "unique_id": "player_22",
+    "total_points": 233,
+    "predictions_count": 102
+  },
+  {
+    "id": "598c4255-144e-4f41-af60-744e62631a5e",
+    "display_name": "Player 11",
+    "unique_id": "player_11",
+    "total_points": 190,
+    "predictions_count": 99
+  },
+  {
+    "id": "59b1845c-b41e-4b68-8314-847b2f2b962f",
+    "display_name": "Player 03",
+    "unique_id": "player_03",
+    "total_points": 15,
+    "predictions_count": 9
+  },
+  {
+    "id": "5cca4835-5e79-44a7-9b1c-6b08ae6200b4",
+    "display_name": "Player 07",
+    "unique_id": "player_07",
+    "total_points": 260,
+    "predictions_count": 103
+  },
+  {
+    "id": "666bdd2d-448c-447a-af71-a8fc5fde682a",
+    "display_name": "Player 05",
+    "unique_id": "player_05",
+    "total_points": 233,
+    "predictions_count": 104
+  },
+  {
+    "id": "87815f5a-73d5-4854-9946-d97182242322",
+    "display_name": "Player 18",
+    "unique_id": "player_18",
+    "total_points": 249,
+    "predictions_count": 104
+  },
+  {
+    "id": "8edd96f7-390e-4c03-855c-660905443992",
+    "display_name": "Player 04",
+    "unique_id": "player_04",
+    "total_points": 155,
+    "predictions_count": 82
+  },
+  {
+    "id": "93f67b1b-1d82-49d7-99cc-497d21f187ab",
+    "display_name": "Player 01",
+    "unique_id": "player_01",
+    "total_points": 270,
+    "predictions_count": 104
+  },
+  {
+    "id": "aaeddedc-9839-40d7-b855-7dea94fdbb21",
+    "display_name": "Player 09",
+    "unique_id": "player_09",
+    "total_points": 3,
+    "predictions_count": 4
+  },
+  {
+    "id": "b2e80ec5-ec27-45cf-a01d-6dac807e3d93",
+    "display_name": "Player 06",
+    "unique_id": "player_06",
+    "total_points": 251,
+    "predictions_count": 104
+  },
+  {
+    "id": "bec25a39-17e2-412f-a15b-64f7c4787c1d",
+    "display_name": "Player 19",
+    "unique_id": "player_19",
+    "total_points": 221,
+    "predictions_count": 89
+  },
+  {
+    "id": "cf5df181-120e-4925-86d2-950cf4973dbc",
+    "display_name": "Player 02",
+    "unique_id": "player_02",
+    "total_points": 116,
+    "predictions_count": 72
+  },
+  {
+    "id": "de80891e-805c-46af-a5d9-af331db41a3e",
+    "display_name": "Player 23",
+    "unique_id": "player_23",
+    "total_points": 249,
+    "predictions_count": 99
+  },
+  {
+    "id": "e07f74ce-089b-487a-a543-e95d0dfb5719",
+    "display_name": "Player 21",
+    "unique_id": "player_21",
+    "total_points": 112,
+    "predictions_count": 70
+  },
+  {
+    "id": "e85c3fdd-8aa8-40e8-bf0a-9c6b93e02ccb",
+    "display_name": "Player 24",
+    "unique_id": "player_24",
+    "total_points": 0,
+    "predictions_count": 1
+  },
+  {
+    "id": "f5860d85-f4d5-4a75-95b7-480e1877d256",
+    "display_name": "Player 17",
+    "unique_id": "player_17",
+    "total_points": 93,
+    "predictions_count": 56
+  },
+  {
+    "id": "fbe6775a-7154-4e8f-a60a-8a01f35b6fa6",
+    "display_name": "Player 10",
+    "unique_id": "player_10",
+    "total_points": 241,
+    "predictions_count": 93
+  }
+]

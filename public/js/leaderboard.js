@@ -1,19 +1,12 @@
-import { supabase } from './supabase-client.js';
+import { getCurrentUser, loadLeaderboard as loadLeaderboardData } from './data.js';
 
 const leaderboardBody = document.querySelector('#leaderboard-body');
 
 async function loadLeaderboard() {
-  // get current user session so we can highlight their row
-  const { data: sessionData } = await supabase.auth.getSession();
-  const currentUserId = sessionData?.session?.user?.id || null;
-
-  const { data, error } = await supabase
-    .from('leaderboard')
-    .select('id, display_name, unique_id, total_points, predictions_count')
-    .order('total_points', { ascending: false })
-    .limit(50);
-
-  if (error) {
+  let data;
+  try {
+    data = await loadLeaderboardData();
+  } catch (error) {
     renderFallback(error.message || 'Unable to load leaderboard.');
     return;
   }
@@ -36,8 +29,9 @@ async function loadLeaderboard() {
   }
 
   leaderboardBody.innerHTML = '';
+  const currentUserId = getCurrentUser()?.id || null;
 
-  filtered.forEach((row, index) => {
+  filtered.sort((a, b) => Number(b.total_points || 0) - Number(a.total_points || 0)).slice(0, 50).forEach((row, index) => {
     const tr = document.createElement('tr');
 
     // Rank

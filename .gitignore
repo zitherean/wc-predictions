@@ -36,6 +36,9 @@ Thumbs.db
 # Script files
 scripts/
 
-# Optional: local test data
+# CSV data
+data_csv
+
+# local test data
 local-data/
 test-output/
